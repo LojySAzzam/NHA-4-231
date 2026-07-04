@@ -92,6 +92,7 @@ def rebuild_index(index_dir: str = INDEX_DIR, batch_size: int = 5) -> None:
     Rebuild the FAISS index using gemini-embedding-001 (3072-dim).
     Run once after switching from sentence-transformers (384-dim).
     Saves the new index to index_dir, overwriting the old one.
+    Supports resuming from a checkpoint if interrupted by rate limits.
     """
     global _faiss_index
 
@@ -100,14 +101,26 @@ def rebuild_index(index_dir: str = INDEX_DIR, batch_size: int = 5) -> None:
 
     print(f"[RAG] Rebuilding FAISS index with {EMBEDDING_MODEL_NAME} ({EMBEDDING_DIMENSIONS}-dim)...")
     print(f"[RAG] Embedding {len(_train_df):,} rows in batches of {batch_size}...")
-    print("[RAG] Estimated time: ~45 minutes. Rate limit: 100 RPM (free tier).\n")
+    print("[RAG] Rate limit: ~30 RPM (conservative). Checkpoints every 500 rows.\n")
 
     texts = (
         _train_df["instruction_clean"].fillna("") + " [SEP] " +
         _train_df["response_clean"].fillna("")
     ).tolist()
 
-    all_embeddings = []
+    checkpoint_file = os.path.join(index_dir, "embeddings_checkpoint.npy")
+
+    # Resume from checkpoint if it exists
+    if os.path.exists(checkpoint_file):
+        all_embeddings = list(np.load(checkpoint_file))
+        start_i = len(all_embeddings)
+        # Round down to nearest batch boundary
+        start_i = (start_i // batch_size) * batch_size
+        all_embeddings = all_embeddings[:start_i]
+        print(f"[RAG] Resuming from row {start_i} ({len(all_embeddings)} embeddings already done)\n")
+    else:
+        all_embeddings = []
+        start_i = 0
 
     for i in tqdm(range(0, len(texts), batch_size), desc="Embedding"):
         batch = texts[i:i + batch_size]
@@ -120,7 +133,7 @@ def rebuild_index(index_dir: str = INDEX_DIR, batch_size: int = 5) -> None:
                     task_type="retrieval_document",
                 )
                 all_embeddings.extend(result["embedding"])
-                time.sleep(3)  # 5 rows per 3s = 100 RPM exactly
+                time.sleep(10)  # conservative: ~30 RPM, well under 100 RPM limit
                 break
             except Exception as e:
                 if "RESOURCE_EXHAUSTED" in str(e) or "429" in str(e):
@@ -130,9 +143,18 @@ def rebuild_index(index_dir: str = INDEX_DIR, batch_size: int = 5) -> None:
                 else:
                     raise
         else:
-            print(f"\nFailed after 6 attempts at batch {i} — stopping.")
-            break
+            # All 6 attempts failed — save checkpoint and stop gracefully
+            np.save(checkpoint_file, np.array(all_embeddings, dtype="float32"))
+            print(f"\n[RAG] Quota exhausted. Saved checkpoint at {len(all_embeddings)} embeddings.")
+            print("[RAG] Run rebuild_index() again tomorrow to resume automatically.")
+            return
+        
+        # Save checkpoint every 500 embeddings
+        if len(all_embeddings) % 500 == 0:
+            np.save(checkpoint_file, np.array(all_embeddings, dtype="float32"))
+            print(f"\n[RAG] Checkpoint saved at {len(all_embeddings)} embeddings.")
 
+    
     if not all_embeddings:
         raise RuntimeError("No embeddings were generated. Check your API key and quota.")
 
@@ -147,6 +169,11 @@ def rebuild_index(index_dir: str = INDEX_DIR, batch_size: int = 5) -> None:
     index.add(embeddings)
     faiss.write_index(index, os.path.join(index_dir, "train_index.faiss"))
     np.save(os.path.join(index_dir, "train_embeddings.npy"), embeddings)
+
+    # Clean up checkpoint file now that we're done
+    if os.path.exists(checkpoint_file):
+        os.remove(checkpoint_file)
+        print("[RAG] Checkpoint file removed.")
 
     _faiss_index = index
     print(f"\n[RAG] Done: {index.ntotal:,} vectors saved to {index_dir}")
