@@ -1,18 +1,19 @@
 """
 rag_chain.py
 ------------
-Milestone 3 — Core RAG logic
+Milestone 3 — Core RAG logic (Gemini 2.0 Flash + text-embedding-004)
 
-This module is shared by both:
-  - notebooks/Milestone_3_Local.ipynb  (interactive testing)
-  - src/api.py                          (FastAPI production server)
+Pipeline:
+    user query
+        -> embed query (Google text-embedding-004, 768-dim)
+        -> retrieve top-k context docs (FAISS)
+        -> build prompt with context
+        -> generate answer (Gemini 2.0 Flash via Google AI Studio)
+        -> return answer + sources
 
-Pipeline per query:
-  1. Embed the user question with sentence-transformers
-  2. Retrieve top-k nearest documents from the FAISS index
-  3. Build a prompt: [system instructions] + [retrieved context] + [question]
-  4. Generate an answer with flan-t5-base running locally on CPU
-  5. Return the answer + the retrieved source documents
+Swap guide (when Azure is ready):
+    - Replace _retrieve_hybrid() with Azure SearchClient call
+    - Everything else stays identical
 """
 
 import os
@@ -21,121 +22,171 @@ import pickle
 import numpy as np
 import pandas as pd
 import faiss
-from sentence_transformers import SentenceTransformer
-from transformers import T5ForConditionalGeneration, T5Tokenizer
+from dotenv import load_dotenv
 from rank_bm25 import BM25Okapi
+import google.generativeai as genai
 
+# ── Load environment variables from .env ──────────────────────────────────────
+load_dotenv()
 
+GEMINI_API_KEY       = os.getenv("GEMINI_API_KEY")
+GEMINI_MODEL_NAME    = os.getenv("GEMINI_MODEL_NAME",    "gemini-2.0-flash")
+EMBEDDING_MODEL_NAME = os.getenv("EMBEDDING_MODEL_NAME", "gemini-embedding-001")
+EMBEDDING_DIMENSIONS = int(os.getenv("EMBEDDING_DIMENSIONS", "3072"))
 # ── Paths ─────────────────────────────────────────────────────────────────────
-# These resolve correctly whether called from notebooks/ or src/
-_HERE       = os.path.dirname(os.path.abspath(__file__))
-_ROOT       = os.path.dirname(_HERE)
-INDEX_DIR   = os.path.join(_ROOT, "data", "faiss_index")
+BASE_DIR  = os.path.dirname(os.path.dirname(os.path.abspath(__file__)))
+INDEX_DIR = os.path.join(BASE_DIR, "data", "faiss_index")
 
-# ── Model names ───────────────────────────────────────────────────────────────
-EMBED_MODEL_NAME = "all-MiniLM-L6-v2"   # same model used in Milestone 2
-LLM_MODEL_NAME   = "google/flan-t5-base" # 250MB, instruction-following, CPU-friendly
-
-# ── Global model handles (loaded once, reused across requests) ────────────────
-_embed_model  = None
-_llm_model    = None
-_llm_tokenizer = None
-_faiss_index  = None
-_lookup_df    = None
-_bm25         = None
-_train_texts  = None
+# ── Globals (loaded once at startup) ─────────────────────────────────────────
+_faiss_index      = None
+_train_df         = None
+_bm25             = None
+_tokenized_corpus = None
+_gemini_model     = None
 
 
-def _load_models():
+def load_all(index_dir: str = INDEX_DIR) -> None:
     """
-    Load all models and indexes into module-level globals.
-    Called automatically on first use — subsequent calls are no-ops.
-    """
-    global _embed_model, _llm_model, _llm_tokenizer
-    global _faiss_index, _lookup_df, _bm25, _train_texts
-
-    if _embed_model is not None:
-        return  # already loaded
-
-    print("[RAG] Loading embedding model...")
-    _embed_model = SentenceTransformer(EMBED_MODEL_NAME)
-
-    print("[RAG] Loading FAISS index...")
-    _faiss_index = faiss.read_index(os.path.join(INDEX_DIR, "train_index.faiss"))
-    _lookup_df   = pd.read_csv(os.path.join(INDEX_DIR, "train_lookup.csv"))
-
-    print("[RAG] Loading BM25 index...")
-    with open(os.path.join(INDEX_DIR, "bm25_corpus.pkl"), "rb") as f:
-        tokenized_corpus = pickle.load(f)
-    _bm25 = BM25Okapi(tokenized_corpus)
-
-    # Rebuild raw texts for BM25 scoring (used in hybrid search)
-    _train_texts = (
-        _lookup_df["instruction_clean"].fillna("") +
-        " [SEP] " +
-        _lookup_df["response_clean"].fillna("")
-    ).tolist()
-
-    print("[RAG] Loading LLM (flan-t5-base)... first run downloads ~250MB")
-    _llm_tokenizer = T5Tokenizer.from_pretrained(LLM_MODEL_NAME)
-    _llm_model     = T5ForConditionalGeneration.from_pretrained(LLM_MODEL_NAME)
-    _llm_model.eval()
-
-    print("[RAG] All models loaded and ready.")
-
-
-# ── Retrieval ─────────────────────────────────────────────────────────────────
-
-def _simple_tokenize(text: str) -> list:
-    """Lightweight BM25 tokenizer."""
-    return re.findall(r"\b\w+\b", text.lower())
-
-
-def retrieve(query: str, top_k: int = 3, mode: str = "hybrid") -> list:
-    """
-    Retrieve the top-k most relevant documents for a query.
+    Load all models and indexes into memory. Call once at startup.
+    Subsequent calls are no-ops.
 
     Args:
-        query : User's natural language question
-        top_k : Number of documents to retrieve
-        mode  : "vector" (semantic only), "bm25" (keyword only),
-                or "hybrid" (weighted fusion, recommended)
+        index_dir: Path to the faiss_index folder from Milestone 2.
+                   NOTE: if you rebuilt the index with 768-dim Gemini embeddings,
+                   point this to the new index folder.
+    """
+    global _faiss_index, _train_df, _bm25, _tokenized_corpus, _gemini_model
+
+    if _faiss_index is not None:
+        return  # already loaded
+
+    if not GEMINI_API_KEY:
+        raise ValueError(
+            "GEMINI_API_KEY not found. "
+            "Make sure your .env file exists and contains GEMINI_API_KEY=..."
+        )
+
+    print("[RAG] Configuring Gemini API...")
+    genai.configure(api_key=GEMINI_API_KEY)
+    _gemini_model = genai.GenerativeModel(GEMINI_MODEL_NAME)
+    print(f"[RAG] Gemini model ready: {GEMINI_MODEL_NAME}")
+
+    print("[RAG] Loading FAISS index...")
+    _faiss_index = faiss.read_index(os.path.join(index_dir, "train_index.faiss"))
+    print(f"[RAG] Index loaded: {_faiss_index.ntotal:,} vectors, dim={_faiss_index.d}")
+
+    # Warn if dimension mismatch — means index needs rebuilding with Gemini embeddings
+    if _faiss_index.d != EMBEDDING_DIMENSIONS:
+        print(
+            f"[RAG] WARNING: Index dimension ({_faiss_index.d}) does not match "
+            f"Gemini embedding dimension ({EMBEDDING_DIMENSIONS}). "
+            f"Run rebuild_index() to fix this before searching."
+        )
+
+    print("[RAG] Loading train lookup table...")
+    _train_df = pd.read_csv(os.path.join(index_dir, "train_lookup.csv"))
+
+    print("[RAG] Loading BM25 corpus...")
+    with open(os.path.join(index_dir, "bm25_corpus.pkl"), "rb") as f:
+        _tokenized_corpus = pickle.load(f)
+    _bm25 = BM25Okapi(_tokenized_corpus)
+
+    print("[RAG] All components loaded. Ready.\n")
+
+
+def rebuild_index(index_dir: str = INDEX_DIR, batch_size: int = 50) -> None:
+    """
+    Rebuild the FAISS index using Gemini text-embedding-004 (768-dim).
+
+    Call this once after switching from sentence-transformers (384-dim)
+    to Gemini embeddings (768-dim). Saves the new index to index_dir.
+
+    Args:
+        index_dir  : Where to save the rebuilt index
+        batch_size : Rows per embedding API call (keep low to avoid rate limits)
+    """
+    global _faiss_index
+
+    if _train_df is None:
+        raise RuntimeError("Call load_all() first to load the lookup table.")
+
+    print(f"[RAG] Rebuilding FAISS index with {EMBEDDING_MODEL_NAME} ({EMBEDDING_DIMENSIONS}-dim)...")
+    print(f"[RAG] Embedding {len(_train_df):,} rows in batches of {batch_size}...")
+    print("[RAG] This takes ~5-10 minutes on the free tier (rate limit: 100 RPM).\n")
+
+    texts = (
+        _train_df["instruction_clean"].fillna("") + " [SEP] " +
+        _train_df["response_clean"].fillna("")
+    ).tolist()
+
+    all_embeddings = []
+    import time
+    from tqdm.auto import tqdm
+
+    for i in tqdm(range(0, len(texts), batch_size), desc="Embedding"):
+        batch = texts[i:i + batch_size]
+        result = genai.embed_content(
+            model="models/gemini-embedding-001",
+            content=batch,
+            task_type="retrieval_document",
+        )
+        all_embeddings.extend(result["embedding"])
+        time.sleep(0.6)   # stay within 100 RPM free tier limit
+
+    embeddings = np.array(all_embeddings, dtype="float32")
+
+    # L2-normalize so inner product = cosine similarity
+    norms = np.linalg.norm(embeddings, axis=1, keepdims=True)
+    embeddings = embeddings / np.maximum(norms, 1e-10)
+
+    # Build and save new index
+    index = faiss.IndexFlatIP(EMBEDDING_DIMENSIONS)
+    index.add(embeddings)
+    faiss.write_index(index, os.path.join(index_dir, "train_index.faiss"))
+    np.save(os.path.join(index_dir, "train_embeddings.npy"), embeddings)
+
+    _faiss_index = index
+    print(f"\n[RAG] Index rebuilt: {index.ntotal:,} vectors saved to {index_dir}")
+
+
+# ── Internal helpers ──────────────────────────────────────────────────────────
+
+def _simple_tokenize(text: str) -> list:
+    """Tokenize text for BM25 — lowercase words only."""
+    return re.findall(r'\b\w+\b', text.lower())
+
+
+def _embed_query(query: str) -> np.ndarray:
+    """
+    Embed a single query string using Gemini text-embedding-004.
+
+    Uses task_type='retrieval_query' (different from 'retrieval_document'
+    used when indexing) — Google recommends this split for best retrieval quality.
+
+    Args:
+        query: User's natural language question
 
     Returns:
-        List of dicts with keys: score, category, intent, instruction, response
+        np.ndarray of shape (1, 768), float32, L2-normalized
     """
-    _load_models()
+    result = genai.embed_content(
+        model="models/gemini-embedding-001",
+        content=query,
+        task_type="retrieval_query",
+    )
+    vec = np.array(result["embedding"], dtype="float32").reshape(1, -1)
+    vec = vec / np.maximum(np.linalg.norm(vec), 1e-10)
+    return vec
 
-    query_vec = _embed_model.encode(
-        [query], normalize_embeddings=True, convert_to_numpy=True
-    ).astype("float32")
 
-    if mode == "vector":
-        scores, indices = _faiss_index.search(query_vec, top_k)
-        pairs = list(zip(scores[0], indices[0]))
-
-    elif mode == "bm25":
-        bm25_scores = _bm25.get_scores(_simple_tokenize(query))
-        top_indices = np.argsort(bm25_scores)[::-1][:top_k]
-        pairs = [(bm25_scores[i], i) for i in top_indices]
-
-    else:  # hybrid
-        vec_scores, vec_indices = _faiss_index.search(query_vec, len(_train_texts))
-        vec_map = dict(zip(vec_indices[0], vec_scores[0]))
-
-        bm25_scores = _bm25.get_scores(_simple_tokenize(query))
-        bm25_max    = bm25_scores.max() if bm25_scores.max() > 0 else 1.0
-        bm25_norm   = bm25_scores / bm25_max
-
-        alpha   = 0.6  # 60% vector, 40% keyword — tuned on validation set
-        fused   = [alpha * vec_map.get(i, 0.0) + (1 - alpha) * bm25_norm[i]
-                   for i in range(len(_train_texts))]
-        top_idx = np.argsort(fused)[::-1][:top_k]
-        pairs   = [(fused[i], i) for i in top_idx]
+def _retrieve_vector(query: str, top_k: int = 3) -> list:
+    """Pure vector search via FAISS."""
+    query_vec = _embed_query(query)
+    scores, indices = _faiss_index.search(query_vec, top_k)
 
     results = []
-    for score, idx in pairs:
-        row = _lookup_df.iloc[int(idx)]
+    for score, idx in zip(scores[0], indices[0]):
+        row = _train_df.iloc[idx]
         results.append({
             "score"      : float(score),
             "category"   : row["category"],
@@ -146,122 +197,151 @@ def retrieve(query: str, top_k: int = 3, mode: str = "hybrid") -> list:
     return results
 
 
-# ── Prompt builder ────────────────────────────────────────────────────────────
-
-def _build_prompt(question: str, retrieved_docs: list) -> str:
+def _retrieve_hybrid(query: str, top_k: int = 3, alpha: float = 0.6) -> list:
     """
-    Build the prompt fed to the LLM.
+    Hybrid retrieval: fused Gemini vector + BM25 keyword scores.
+
+    Args:
+        query : User question
+        top_k : Number of results
+        alpha : Vector weight. 0.6 = slightly favour semantic over keyword.
+    """
+    n = len(_tokenized_corpus)
+
+    # Vector scores
+    query_vec = _embed_query(query)
+    vec_scores, vec_indices = _faiss_index.search(query_vec, n)
+    vec_score_map = dict(zip(vec_indices[0], vec_scores[0]))
+
+    # BM25 scores normalized to [0, 1]
+    bm25_scores = _bm25.get_scores(_simple_tokenize(query))
+    bm25_max    = bm25_scores.max() if bm25_scores.max() > 0 else 1.0
+    bm25_norm   = bm25_scores / bm25_max
+
+    fused = np.array([
+        alpha * vec_score_map.get(i, 0.0) + (1 - alpha) * bm25_norm[i]
+        for i in range(n)
+    ])
+    top_indices = np.argsort(fused)[::-1][:top_k]
+
+    results = []
+    for idx in top_indices:
+        row = _train_df.iloc[idx]
+        results.append({
+            "score"      : float(fused[idx]),
+            "category"   : row["category"],
+            "intent"     : row["intent"],
+            "instruction": row["instruction_clean"],
+            "response"   : row["response_clean"],
+        })
+    return results
+
+
+def _build_prompt(query: str, context_docs: list) -> str:
+    """
+    Build the prompt sent to Gemini.
 
     Format:
-        System instruction
-        --- context block (retrieved docs) ---
-        Question: <user question>
+        System: you are a helpful customer support agent...
+        Context 1 [intent]: Q: ... A: ...
+        Context 2 [intent]: Q: ... A: ...
+        Customer question: ...
         Answer:
-
-    flan-t5 is an instruction-tuned model — it responds well to this
-    explicit question/answer structure without needing few-shot examples.
-
-    Args:
-        question      : Original user question
-        retrieved_docs: Output of retrieve()
-
-    Returns:
-        Single string prompt ready for tokenization
     """
-    context_blocks = []
-    for i, doc in enumerate(retrieved_docs, 1):
-        context_blocks.append(
-            f"[Document {i}]\n"
-            f"Category: {doc['category']} | Intent: {doc['intent']}\n"
-            f"Example question: {doc['instruction']}\n"
-            f"Example answer: {doc['response']}"
+    context_lines = []
+    for i, doc in enumerate(context_docs, 1):
+        context_lines.append(
+            f"Context {i} [{doc['intent']}]:\n"
+            f"  Q: {doc['instruction']}\n"
+            f"  A: {doc['response']}"
         )
-    context = "\n\n".join(context_blocks)
+    context_block = "\n\n".join(context_lines)
 
-    prompt = (
-        "You are a helpful customer support assistant. "
-        "Use the context below to answer the customer's question clearly and politely. "
-        "If the context does not cover the question, say so honestly.\n\n"
-        f"Context:\n{context}\n\n"
-        f"Customer question: {question}\n\n"
+    return (
+        "You are a professional customer support agent. "
+        "Use the context below to answer the customer's question accurately, "
+        "concisely, and in a polite and helpful tone. "
+        "If the context does not contain enough information to answer, "
+        "say so politely and suggest the customer contact support directly.\n\n"
+        f"{context_block}\n\n"
+        f"Customer question: {query}\n\n"
         "Answer:"
     )
-    return prompt
 
 
-# ── Generation ────────────────────────────────────────────────────────────────
-
-def generate_answer(prompt: str, max_new_tokens: int = 200) -> str:
+def _generate(prompt: str) -> str:
     """
-    Generate an answer from the prompt using flan-t5-base locally.
+    Generate an answer using Gemini 2.0 Flash.
 
     Args:
-        prompt         : Full prompt string from _build_prompt()
-        max_new_tokens : Max tokens to generate (200 ≈ 2-3 sentences)
+        prompt: Full prompt string from _build_prompt()
 
     Returns:
         Generated answer string
     """
-    _load_models()
-
-    inputs = _llm_tokenizer(
+    response = _gemini_model.generate_content(
         prompt,
-        return_tensors="pt",
-        max_length=512,
-        truncation=True,
+        generation_config=genai.GenerationConfig(
+            temperature=0.2,       # low temp = more factual, less creative
+            max_output_tokens=300,
+        ),
     )
-    outputs = _llm_model.generate(
-        **inputs,
-        max_new_tokens=max_new_tokens,
-        num_beams=4,           # beam search for better quality than greedy
-        early_stopping=True,
-        no_repeat_ngram_size=3, # prevents repetitive phrases
-    )
-    return _llm_tokenizer.decode(outputs[0], skip_special_tokens=True)
+    return response.text.strip()
 
 
-# ── Main RAG function ─────────────────────────────────────────────────────────
+# ── Public API (called by notebook and FastAPI) ───────────────────────────────
 
-def ask(question: str, top_k: int = 3, retrieval_mode: str = "hybrid") -> dict:
+def ask(
+    query: str,
+    top_k: int = 3,
+    use_hybrid: bool = True,
+) -> dict:
     """
-    Full RAG pipeline: retrieve context → build prompt → generate answer.
-
-    This is the single function called by both the notebook and the API.
+    Full RAG pipeline: retrieve context, generate answer with Gemini.
 
     Args:
-        question       : User's natural language question
-        top_k          : Number of context documents to retrieve
-        retrieval_mode : "vector", "bm25", or "hybrid"
+        query      : Customer's question (raw natural language)
+        top_k      : Number of context docs to retrieve
+        use_hybrid : True = vector+BM25 fusion, False = pure vector
 
     Returns:
-        dict with keys:
-            question    : original question
-            answer      : generated answer string
-            sources     : list of retrieved documents (for transparency / citation)
-            top_intent  : most likely intent detected from top retrieved doc
+        dict with keys: query, answer, sources, retrieval
+
+    Example:
+        >>> from src.rag_chain import load_all, ask
+        >>> load_all()
+        >>> result = ask("I want to cancel my order")
+        >>> print(result["answer"])
     """
-    _load_models()
+    if _faiss_index is None:
+        raise RuntimeError("Models not loaded. Call load_all() first.")
 
-    # Step 1 — retrieve
-    sources = retrieve(question, top_k=top_k, mode=retrieval_mode)
+    context_docs = _retrieve_hybrid(query, top_k=top_k) if use_hybrid \
+                   else _retrieve_vector(query, top_k=top_k)
 
-    # Step 2 — build prompt
-    prompt = _build_prompt(question, sources)
-
-    # Step 3 — generate
-    answer = generate_answer(prompt)
+    prompt = _build_prompt(query, context_docs)
+    answer = _generate(prompt)
 
     return {
-        "question"   : question,
-        "answer"     : answer,
-        "sources"    : sources,
-        "top_intent" : sources[0]["intent"] if sources else "unknown",
+        "query"    : query,
+        "answer"   : answer,
+        "sources"  : context_docs,
+        "retrieval": "hybrid" if use_hybrid else "vector",
     }
 
 
-if __name__ == "__main__":
-    # Quick smoke test — run: python src/rag_chain.py
-    result = ask("I want to cancel my order")
-    print(f"\nQ: {result['question']}")
-    print(f"A: {result['answer']}")
-    print(f"Intent detected: {result['top_intent']}")
+def search(query: str, top_k: int = 5, use_hybrid: bool = True) -> list:
+    """
+    Retrieval only — no generation. Returns raw context docs.
+    Used by the GET /search API endpoint.
+
+    Args:
+        query      : Natural language search query
+        top_k      : Number of results
+        use_hybrid : True = hybrid, False = vector only
+    """
+    if _faiss_index is None:
+        raise RuntimeError("Models not loaded. Call load_all() first.")
+
+    return _retrieve_hybrid(query, top_k=top_k) if use_hybrid \
+           else _retrieve_vector(query, top_k=top_k)
