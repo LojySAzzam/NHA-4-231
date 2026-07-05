@@ -1,0 +1,20 @@
+{
+  "query": "i need help seeing what shipping methods i can choose",
+  "answer": "I'd be happy to help you with that. To view the available shipping methods, you can visit our website and navigate to the checkout page or check out our shipping and delivery page for a comprehensive overview. We offer several shipping options, including Standard Shipping, Expedited Shipping, Overnight Shipping, and In-Store Pickup. If you'd like more information on these methods, such as estimated delivery times, I can provide you with a brief overview. Alternatively, you can also reach out to our customer support team for personalized assistance. Which option sounds most convenient for you?",
+  "retrieval": "hybrid",
+  "latency_ms": 884.650707244873,
+  "sources": [
+    {
+      "intent": "delivery_options",
+      "score": 25.62690319062381
+    },
+    {
+      "intent": "delivery_options",
+      "score": 25.355971945418013
+    },
+    {
+      "intent": "delivery_options",
+      "score": 24.1251261686238
+    }
+  ]
+}

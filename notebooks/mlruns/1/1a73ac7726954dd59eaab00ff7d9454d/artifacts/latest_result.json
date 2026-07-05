@@ -1,0 +1,20 @@
+{
+  "query": "help me checking how long it takes for the article to arrive",
+  "answer": "We understand your eagerness to know the estimated time of arrival for your article. To provide you with the most accurate information, could you please provide the tracking number or your order number? With that, we'll be able to give you a precise estimate of the delivery date. We appreciate your patience and cooperation in this matter.",
+  "retrieval": "hybrid",
+  "latency_ms": 1750.507116317749,
+  "sources": [
+    {
+      "intent": "delivery_period",
+      "score": 37.92413722390357
+    },
+    {
+      "intent": "delivery_period",
+      "score": 36.283057415471006
+    },
+    {
+      "intent": "delivery_period",
+      "score": 34.33659815295798
+    }
+  ]
+}

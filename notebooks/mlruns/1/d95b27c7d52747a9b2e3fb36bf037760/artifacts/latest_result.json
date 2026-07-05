@@ -1,0 +1,20 @@
+{
+  "query": "want help reporting issues with online payments",
+  "answer": "I'm here to assist you in reporting any issues you're experiencing with online payments. To better understand the situation, could you please provide more specific details about the problems you're facing? This will help us address your concerns accurately and provide you with the best possible solution. Thank you for reaching out, and together we will work towards resolving these issues with your online payments.",
+  "retrieval": "hybrid",
+  "latency_ms": 797.0085144042969,
+  "sources": [
+    {
+      "intent": "payment_issue",
+      "score": 25.0338675033739
+    },
+    {
+      "intent": "payment_issue",
+      "score": 23.336085402399743
+    },
+    {
+      "intent": "payment_issue",
+      "score": 22.347825921066647
+    }
+  ]
+}

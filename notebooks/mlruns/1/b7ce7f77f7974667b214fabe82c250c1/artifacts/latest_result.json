@@ -1,0 +1,20 @@
+{
+  "query": "i need assistance removing my pro account",
+  "answer": "I'm here to help you with removing your pro account. To assist you, could you please provide me with your account details, such as your username or email address, so I can locate your account and guide you on the next steps for removal? Alternatively, you can also follow these steps to cancel your account: \n\n1. Log in to your account on our website.\n2. Go to the account settings or profile section.\n3. Look for the option to manage or cancel your subscription.\n4. Follow the prompts or instructions provided to cancel your account.\n\nIf you need more information or encounter any difficulties, you can also visit our website's support page for detailed instructions or reach out to our customer support team for personalized assistance. We're here to ensure the account removal process is smooth and satisfactory for you.",
+  "retrieval": "hybrid",
+  "latency_ms": 831.0880661010742,
+  "sources": [
+    {
+      "intent": "delete_account",
+      "score": 16.805579353974082
+    },
+    {
+      "intent": "delete_account",
+      "score": 15.386010462383755
+    },
+    {
+      "intent": "delete_account",
+      "score": 14.470357672769795
+    }
+  ]
+}

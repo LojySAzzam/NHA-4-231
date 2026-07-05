@@ -1,0 +1,20 @@
+{
+  "query": "can you help me to cancel purchase your order number?",
+  "answer": "I'd be happy to help you with canceling your purchase. To cancel your purchase, please follow these steps:\n\n1. Log in to your account using your credentials.\n2. Navigate to the 'order history' or 'purchase history' section of your account.\n3. Locate the purchase with the order number and click on it to view the details.\n4. Look for the option labeled 'cancel' associated with this purchase. Please select it.\n5. The system may ask you to confirm the cancellation. Please follow the instructions to complete the cancellation process.\n\nIf you encounter any difficulties or have further questions, our dedicated customer support team is available to assist you. You can reach us through the Live Chat feature on our website or contact us directly. We're committed to ensuring your satisfaction and appreciate your understanding. \n\nPlease note that I would need your actual order number to provide more specific assistance. If you could provide that, I'd be more than happy to help you further.",
+  "retrieval": "hybrid",
+  "latency_ms": 1003.2813549041748,
+  "sources": [
+    {
+      "intent": "cancel_order",
+      "score": 26.192111126846676
+    },
+    {
+      "intent": "cancel_order",
+      "score": 26.12791324740483
+    },
+    {
+      "intent": "cancel_order",
+      "score": 25.94378425629287
+    }
+  ]
+}

@@ -1,0 +1,20 @@
+{
+  "query": "help me deleting my information account",
+  "answer": "I'd be happy to help you with deleting your information account. To ensure that I provide you with accurate instructions, could you please provide me with your account username or any other identifying information? This will enable me to guide you through the necessary steps to delete your information account smoothly. Rest assured that your satisfaction is important to us, and we will handle your request promptly and securely.",
+  "retrieval": "hybrid",
+  "latency_ms": 2793.8387393951416,
+  "sources": [
+    {
+      "intent": "delete_account",
+      "score": 16.982109983845675
+    },
+    {
+      "intent": "delete_account",
+      "score": 16.78900550595169
+    },
+    {
+      "intent": "delete_account",
+      "score": 16.043746933772425
+    }
+  ]
+}

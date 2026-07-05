@@ -1,0 +1,20 @@
+{
+  "query": "could I see in which cases can I ask to be refunded?",
+  "answer": "Of course, I'd be happy to help you with that. You can typically ask for a refund in the following situations:\n\n1. **Product/Service Defect:** If the item or service you purchased has a defect or does not meet its description.\n2. **Non-Delivery of Goods:** If you haven't received your purchased item within the expected timeframe.\n3. **Cancellation within Grace Period:** If you change your mind within the specified grace period.\n4. **Unauthorized Charges:** If you notice any unfamiliar or duplicate charges on your account.\n5. **Event Cancellation:** If a scheduled event is canceled and not rescheduled, you may be entitled to a refund for the tickets purchased.\n6. **Duplicate Charges:** If you have been charged multiple times for the same item or service.\n\nPlease note that refund policies may vary slightly from vendor to vendor or service provider to service provider. It's always a good idea to refer to the terms and conditions or contact the specific vendor or service provider for detailed information on their refund policy.\n\nIf you have any further questions or if there's anything else I can assist you with, please let me know!",
+  "retrieval": "hybrid",
+  "latency_ms": 1052.3474216461182,
+  "sources": [
+    {
+      "intent": "check_refund_policy",
+      "score": 27.089482949090115
+    },
+    {
+      "intent": "check_refund_policy",
+      "score": 26.88540486990869
+    },
+    {
+      "intent": "check_refund_policy",
+      "score": 26.677005471600687
+    }
+  ]
+}

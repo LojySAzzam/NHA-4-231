@@ -1,0 +1,20 @@
+{
+  "query": "i want assistance to check what payment options are allowed",
+  "answer": "Of course, I'd be happy to help you with that. To view the allowed payment options, you can visit our website and navigate to the \"Payment Options\" or \"Checkout\" section. There, you will find a list of the payment methods we accept. If you need more detailed instructions, you can follow these steps:\n\n1. Visit our website and go to the payment page or proceed to checkout.\n2. Look for the \"Payment Options\" or \"Payment Methods\" section and click on it to expand.\n3. You will see a list of available payment methods, along with any specific instructions or restrictions.\n\nIf you have any further questions or need assistance with a specific payment method, please don't hesitate to ask. I'm here to help and ensure you have a seamless payment experience.",
+  "retrieval": "hybrid",
+  "latency_ms": 1127.4704933166504,
+  "sources": [
+    {
+      "intent": "check_payment_methods",
+      "score": 26.328096816394826
+    },
+    {
+      "intent": "check_payment_methods",
+      "score": 25.90166960380896
+    },
+    {
+      "intent": "check_payment_methods",
+      "score": 25.86151746961035
+    }
+  ]
+}

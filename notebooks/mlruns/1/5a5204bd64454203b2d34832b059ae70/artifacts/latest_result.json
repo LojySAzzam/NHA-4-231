@@ -1,0 +1,20 @@
+{
+  "query": "I have got to submit some feedback for a service",
+  "answer": "Thank you for choosing to share your feedback about our service. We truly value your insights and appreciate your effort in helping us enhance our offerings. To submit your feedback, I recommend visiting our website and navigating to the \"Feedback\" section or the \"Contact Us\" page, where you will find a dedicated form to share your thoughts. If you need more guidance, please let me know which specific service you would like to leave feedback for, and I'll be happy to assist you step by step.",
+  "retrieval": "hybrid",
+  "latency_ms": 788.2299423217773,
+  "sources": [
+    {
+      "intent": "review",
+      "score": 27.79996224255253
+    },
+    {
+      "intent": "review",
+      "score": 27.423853072008338
+    },
+    {
+      "intent": "review",
+      "score": 26.91549783469994
+    }
+  ]
+}

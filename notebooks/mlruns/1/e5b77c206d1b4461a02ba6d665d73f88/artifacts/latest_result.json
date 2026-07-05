@@ -1,0 +1,20 @@
+{
+  "query": "get invoice from November",
+  "answer": "I'd be happy to help you retrieve your invoice from November. To ensure I can locate the correct invoice, could you please provide me with a bit more information, such as the invoice number or any other specific details related to the invoice from November? This will help me assist you more efficiently.",
+  "retrieval": "hybrid",
+  "latency_ms": 1743.7617778778076,
+  "sources": [
+    {
+      "intent": "get_invoice",
+      "score": 11.28960637235043
+    },
+    {
+      "intent": "get_invoice",
+      "score": 11.182355131935077
+    },
+    {
+      "intent": "get_invoice",
+      "score": 11.141558598830661
+    }
+  ]
+}

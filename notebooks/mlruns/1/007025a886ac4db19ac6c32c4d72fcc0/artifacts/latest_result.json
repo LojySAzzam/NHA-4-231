@@ -1,0 +1,20 @@
+{
+  "query": "how can I switch to the freemium account?",
+  "answer": "To switch to the freemium account, you can follow these steps:\n\n1. Log in to your account on our platform.\n2. Navigate to your account settings or profile section.\n3. Look for the option to switch or modify your account type.\n4. Select the freemium account option from the available choices.\n5. Follow the on-screen prompts to confirm the switch and save the changes.\n\nIf you encounter any difficulties or have further questions, please don't hesitate to let me know. I'm here to ensure a smooth transition and address any concerns you may have. Enjoy the benefits of your new freemium account!",
+  "retrieval": "hybrid",
+  "latency_ms": 3892.972946166992,
+  "sources": [
+    {
+      "intent": "switch_account",
+      "score": 26.708801839086064
+    },
+    {
+      "intent": "switch_account",
+      "score": 24.831499391637177
+    },
+    {
+      "intent": "switch_account",
+      "score": 24.555596457212957
+    }
+  ]
+}

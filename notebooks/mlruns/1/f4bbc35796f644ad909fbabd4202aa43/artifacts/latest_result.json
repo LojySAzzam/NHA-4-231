@@ -1,0 +1,20 @@
+{
+  "query": "I don't know what I have to do to order some items",
+  "answer": "Thank you for your interest in purchasing our items. To place an order, simply browse our collection and select the items you want to purchase. Then, add them to your shopping cart and proceed to the checkout page. There, you'll need to provide your shipping and payment details. After reviewing your order summary, click on the \"Place Order\" button to complete your purchase. If you have any specific questions or need further assistance during the process, please feel free to ask. Happy shopping!",
+  "retrieval": "hybrid",
+  "latency_ms": 803.7722110748291,
+  "sources": [
+    {
+      "intent": "place_order",
+      "score": 33.08584923180705
+    },
+    {
+      "intent": "place_order",
+      "score": 31.49289645773971
+    },
+    {
+      "intent": "place_order",
+      "score": 30.766195346184606
+    }
+  ]
+}

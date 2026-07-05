@@ -1,0 +1,20 @@
+{
+  "query": "i want help listing the accepted payment options",
+  "answer": "You've come to the right place. I'm happy to help you with a rundown of our accepted payment options. Here they are:\n\n- **Credit/Debit Card:** We accept major cards like Visa, Mastercard, and American Express.\n- **PayPal:** A popular online payment method that's secure and widely used.\n- **Bank Transfer:** This allows you to make direct payments from your bank account.\n- **Apple Pay:** An easy way for Apple users to make payments.\n- **Google Pay (or Google Wallet):** Google's payment system for fast, easy checkouts.\n\nThese options offer convenience and security to meet your payment requirements. Should you have any further questions or need assistance, feel free to ask.",
+  "retrieval": "hybrid",
+  "latency_ms": 745.8875179290771,
+  "sources": [
+    {
+      "intent": "check_payment_methods",
+      "score": 28.19246075845572
+    },
+    {
+      "intent": "check_payment_methods",
+      "score": 26.751420719957032
+    },
+    {
+      "intent": "check_payment_methods",
+      "score": 25.520358882178083
+    }
+  ]
+}

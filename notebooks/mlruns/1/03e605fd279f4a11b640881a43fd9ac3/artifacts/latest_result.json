@@ -1,0 +1,20 @@
+{
+  "query": "I need to write an opinion for your products",
+  "answer": "I'd be more than happy to assist you in writing an opinion about our products. To get started, could you please let me know which specific product you would like to write an opinion about? Additionally, you can follow these simple steps to write a review: \n\n1. Visit our website and navigate to the product page of the item you would like to review.\n2. Scroll down to the reviews section on the product page.\n3. Click on the \"Write a Review\" button or a similar link.\n4. You may be asked to provide a rating, a title for your review, and your overall opinion of the product.\n5. Feel free to share your detailed experience and any specific pros or cons you observed.\n6. Once you have finished writing your review, click the \"Submit\" or \"Post\" button.\n\nIf you need more guidance or have any questions, please don't hesitate to ask, and I'll be happy to help you craft your opinion effectively.",
+  "retrieval": "hybrid",
+  "latency_ms": 2956.4716815948486,
+  "sources": [
+    {
+      "intent": "review",
+      "score": 34.24158716021624
+    },
+    {
+      "intent": "review",
+      "score": 32.417998252732
+    },
+    {
+      "intent": "review",
+      "score": 32.302113702993786
+    }
+  ]
+}

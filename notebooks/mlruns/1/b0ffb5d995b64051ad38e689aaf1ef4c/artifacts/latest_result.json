@@ -1,0 +1,20 @@
+{
+  "query": "another information account",
+  "answer": "Thank you for considering opening another information account with us. We appreciate your continued trust and loyalty to our services. To proceed, I kindly ask you to provide your full name, email address, and preferred username. Once I have these details, I'll guide you through the process of creating your new information account seamlessly. Rest assured that we prioritize your security and privacy as our top concern.",
+  "retrieval": "hybrid",
+  "latency_ms": 539.9055480957031,
+  "sources": [
+    {
+      "intent": "create_account",
+      "score": 12.0080550264116
+    },
+    {
+      "intent": "create_account",
+      "score": 11.787676419272238
+    },
+    {
+      "intent": "create_account",
+      "score": 11.74731798178501
+    }
+  ]
+}

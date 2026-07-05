@@ -1,0 +1,20 @@
+{
+  "query": "where to restore my account key?",
+  "answer": "To restore your account key, you can start by visiting our website and navigating to the login page. From there, look for the \"Forgot Account Key\" option and click on it. You will then be prompted to enter the email address associated with your account, and after that, you'll receive an email with instructions on how to restore your account key. If you have any issues or need further assistance, please don't hesitate to reach out to us. We're here to help.",
+  "retrieval": "hybrid",
+  "latency_ms": 617.5143718719482,
+  "sources": [
+    {
+      "intent": "recover_password",
+      "score": 22.290383875782126
+    },
+    {
+      "intent": "recover_password",
+      "score": 20.827219972738696
+    },
+    {
+      "intent": "recover_password",
+      "score": 20.813730724049076
+    }
+  ]
+}

@@ -1,0 +1,20 @@
+{
+  "query": "order your order number current status",
+  "answer": "Honored to assist! I'm clued in that you would like to know the current status of your order with the order number. To provide you with the most accurate information, I kindly request you to provide me with a few moments while I check the status of your order. Once I have the details, I will promptly assist you with the current status. Alternatively, you can also visit our website's 'information' page and enter your order number to get the most up-to-date information regarding the status of your order. If you have any other questions or need further assistance, please feel free to let me know. I'm here to help!",
+  "retrieval": "hybrid",
+  "latency_ms": 694.4169998168945,
+  "sources": [
+    {
+      "intent": "track_order",
+      "score": 20.857097732021572
+    },
+    {
+      "intent": "track_order",
+      "score": 20.67779747669494
+    },
+    {
+      "intent": "track_order",
+      "score": 20.564157323429946
+    }
+  ]
+}

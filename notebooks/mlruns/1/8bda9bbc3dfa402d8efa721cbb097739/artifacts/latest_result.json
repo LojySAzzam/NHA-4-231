@@ -1,0 +1,20 @@
+{
+  "query": "i do not know how to set my shipping address up",
+  "answer": "I'm happy to help you with setting up your shipping address. To do so, please follow these steps:\n\n1. Log in to your account on our website.\n2. Navigate to the 'My Account' or 'Profile' section.\n3. Look for the 'Shipping Addresses' or similar option.\n4. Click on 'Add a New Address' or 'Edit Shipping Addresses'.\n5. Enter the details of your shipping address, such as the street name, city, state, and zip code.\n6. Double-check the accuracy of the information you provided.\n7. Save the changes.\n\nIf you encounter any difficulties or require further assistance, please don't hesitate to reach out. I'm here to ensure that you successfully set up your shipping address.",
+  "retrieval": "hybrid",
+  "latency_ms": 828.3483982086182,
+  "sources": [
+    {
+      "intent": "set_up_shipping_address",
+      "score": 26.712801063217597
+    },
+    {
+      "intent": "set_up_shipping_address",
+      "score": 26.039852538148082
+    },
+    {
+      "intent": "set_up_shipping_address",
+      "score": 25.826397574724236
+    }
+  ]
+}

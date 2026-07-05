@@ -1,0 +1,20 @@
+{
+  "query": "I don't know what to do to find the invoice #37777",
+  "answer": "I completely understand your confusion about finding your invoice with the number #37777. To access your invoice, you can log in to your account on our website and navigate to the \"Billing\" or \"Invoices\" section. There, you should be able to find and download the invoice with the specified number. If you encounter any difficulties or have further questions along the way, please don't hesitate to let me know. I'm here to assist you every step of the way.",
+  "retrieval": "hybrid",
+  "latency_ms": 3974.609375,
+  "sources": [
+    {
+      "intent": "get_invoice",
+      "score": 33.51748163096306
+    },
+    {
+      "intent": "get_invoice",
+      "score": 33.119704418239685
+    },
+    {
+      "intent": "get_invoice",
+      "score": 32.928652885133516
+    }
+  ]
+}

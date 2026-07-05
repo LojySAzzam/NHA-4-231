@@ -1,0 +1,20 @@
+{
+  "query": "I want to cancel my order",
+  "answer": "I'd be happy to help you with canceling your order. To proceed, could you please provide me with your order number? Additionally, I'll guide you through the steps to cancel your order. \n\nTo cancel your order, please follow these steps:\n\n1. Log in to your account using your credentials.\n2. Navigate to the \"Order History\" or \"My Orders\" section.\n3. Locate the order you wish to cancel and click on it.\n4. Look for the option to \"Cancel Order\" and select it.\n5. If prompted, provide any required information or reason for cancellation.\n6. Finally, confirm the cancellation to complete the process.\n\nIf you encounter any difficulties or have further questions, our dedicated support team is available to assist you. You can reach us at our support line or through the Live Chat feature on our official website. We're here to help and ensure your satisfaction.",
+  "retrieval": "hybrid",
+  "latency_ms": 1178.1373023986816,
+  "sources": [
+    {
+      "intent": "cancel_order",
+      "score": 14.906508002348188
+    },
+    {
+      "intent": "cancel_order",
+      "score": 14.826496700043252
+    },
+    {
+      "intent": "cancel_order",
+      "score": 14.739768971623015
+    }
+  ]
+}

@@ -1,0 +1,20 @@
+{
+  "query": "is it possible to talk to customer service",
+  "answer": "We're all ears. Yes, it's absolutely possible to talk to our customer service team. You can reach them through our customer support phone number or via Live Chat on our official website. They're dedicated to providing you with the assistance you need. Please don't hesitate to reach out if you have any further questions or concerns.",
+  "retrieval": "hybrid",
+  "latency_ms": 644.2623138427734,
+  "sources": [
+    {
+      "intent": "contact_customer_service",
+      "score": 21.59532534054539
+    },
+    {
+      "intent": "contact_customer_service",
+      "score": 20.6195604416923
+    },
+    {
+      "intent": "contact_customer_service",
+      "score": 20.301855688370342
+    }
+  ]
+}

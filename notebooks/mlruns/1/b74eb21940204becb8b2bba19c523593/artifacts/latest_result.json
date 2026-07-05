@@ -1,0 +1,20 @@
+{
+  "query": "change to the information account",
+  "answer": "I'm happy to help you with changing to the information account. To make the transition smooth, please follow these steps:\n\n1. **Log in:** Start by logging into your account on our platform.\n2. **Account Settings:** Once you're logged in, navigate to the \"information\" or \"information\" section.\n3. **Upgrade Options:** In the account settings or profile section, look for an option related to upgrading your account. Look for terms such as \"information\" or \"information\".\n4. **Information Account Selection:** From the available options, select the one that mentions the \"information\". This will indicate your intention to change to the information account.\n5. **Finalize the Change:** Follow the on-screen prompts or instructions to complete the process and finalize the change.\n\nIf you encounter any difficulties or have further questions, please don't hesitate to ask. I'm here to provide the support you need during this transition. Enjoy the enhanced features and benefits that come with our information account!",
+  "retrieval": "hybrid",
+  "latency_ms": 770.8148956298828,
+  "sources": [
+    {
+      "intent": "switch_account",
+      "score": 16.39389464894195
+    },
+    {
+      "intent": "switch_account",
+      "score": 16.252160253590255
+    },
+    {
+      "intent": "switch_account",
+      "score": 15.857185429552793
+    }
+  ]
+}

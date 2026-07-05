@@ -1,0 +1,20 @@
+{
+  "query": "I have got to earn some products",
+  "answer": "Thank you for reaching out! I appreciate your interest in earning some of our products. We have several opportunities available for you to earn these products. To provide you with the best options, could you please specify which products you are interested in and how you would like to earn them? This information will enable me to guide you through the process and ensure you have a successful experience. Alternatively, you can also visit our website or contact our customer support to learn more about our referral program, promotional events, or contests where you can participate and earn rewards.",
+  "retrieval": "hybrid",
+  "latency_ms": 673.4037399291992,
+  "sources": [
+    {
+      "intent": "place_order",
+      "score": 26.65326046931021
+    },
+    {
+      "intent": "place_order",
+      "score": 25.236723508382592
+    },
+    {
+      "intent": "place_order",
+      "score": 25.151349532789816
+    }
+  ]
+}

@@ -1,0 +1,20 @@
+{
+  "query": "correct purchase your order number",
+  "answer": "We understand your desire to correct purchase number your order number. Making sure your order is accurate and satisfactory is our priority. Could you please let us know specifically what correction you would like to make? This information will enable us to assist you effectively and ensure that your purchase reflects your preferences.",
+  "retrieval": "hybrid",
+  "latency_ms": 574.1839408874512,
+  "sources": [
+    {
+      "intent": "change_order",
+      "score": 17.2485534001935
+    },
+    {
+      "intent": "track_order",
+      "score": 16.70382937835457
+    },
+    {
+      "intent": "track_order",
+      "score": 16.68470583682231
+    }
+  ]
+}

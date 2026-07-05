@@ -1,0 +1,20 @@
+{
+  "query": "why I can't set the secondary shipping address valid up",
+  "answer": "I understand your frustration and confusion regarding the inability to set up your secondary shipping address as valid. To better assist you, I'll provide some general troubleshooting steps. \n\nPlease double-check the following:\n\n1. Verify that all the required fields, such as street name, city, state, and ZIP code, are correctly filled out. Ensure that you haven't missed any mandatory information.\n\n2. Confirm that there are no typos or spelling errors in your address. Even a small mistake can prevent the address from being recognized as valid.\n\n3. Check if your secondary shipping address meets the address format requirements set by our system. Different countries or regions may have different address formats, so make sure you're following the correct format.\n\nIf you have followed these steps and are still experiencing difficulties, it would be helpful to know more about the issues you're facing. Are you encountering any error messages or specific difficulties? With more information, I'll be able to provide you with the appropriate guidance to resolve this matter. Alternatively, you can also reach out to our customer support team, available 24/7, for further assistance. They will be happy to help you resolve the issue and ensure that your secondary shipping address is set up correctly.",
+  "retrieval": "hybrid",
+  "latency_ms": 1504.6005249023438,
+  "sources": [
+    {
+      "intent": "set_up_shipping_address",
+      "score": 39.674121398205266
+    },
+    {
+      "intent": "set_up_shipping_address",
+      "score": 34.80663264199826
+    },
+    {
+      "intent": "set_up_shipping_address",
+      "score": 32.87459624992228
+    }
+  ]
+}
