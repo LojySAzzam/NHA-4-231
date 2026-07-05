@@ -104,7 +104,7 @@ def health_check():
     """
     return {
         "status"       : "ok",
-        "models_loaded": rag._embed_model is not None,
+        "models_loaded": rag._faiss_index is not None,
     }
 
 
