@@ -32,7 +32,7 @@ import src.rag_chain as rag
 # ── Request / Response schemas ────────────────────────────────────────────────
 
 class AskRequest(BaseModel):
-    question   : str  = Field(..., min_length=3, example="I want to cancel my order")
+    message   : str  = Field(..., min_length=3, example="I want to cancel my order")
     top_k      : int  = Field(3, ge=1, le=10, description="Number of context docs to retrieve")
     use_hybrid : bool = Field(True, description="True = vector+BM25, False = pure vector")
 
@@ -42,6 +42,8 @@ class SourceDoc(BaseModel):
     intent     : str
     instruction: str
     response   : str
+    title      : str = "Knowledge Base Document"  # Fallback string
+    page       : int = 1                          # Fallback int
 
 class AskResponse(BaseModel):
     query    : str
@@ -86,9 +88,18 @@ app = FastAPI(
 
 # Allow all origins for local development
 # Lock this down to specific domains before production deployment
+
+origins = [
+    "http://localhost:3000",  # If Next.js
+    "http://localhost:5173",  # If Vite
+    "http://127.0.0.1:3000",
+    "http://127.0.0.1:5173",
+]
+
 app.add_middleware(
     CORSMiddleware,
-    allow_origins=["*"],
+    allow_origins=origins,     # Swapping "*" out for your specific frontend ports
+    allow_credentials=True,
     allow_methods=["*"],
     allow_headers=["*"],
 )
@@ -108,7 +119,7 @@ def health_check():
     }
 
 
-@app.post("/ask", response_model=AskResponse, tags=["RAG"])
+@app.post("/api/chat", response_model=AskResponse, tags=["RAG"])
 def ask_question(request: AskRequest):
     """
     Full RAG pipeline: retrieve relevant context, generate a natural answer.
@@ -120,23 +131,42 @@ def ask_question(request: AskRequest):
     """
     try:
         result = rag.ask(
-            query=request.question,
+            query=request.message,
             top_k=request.top_k,
             use_hybrid=request.use_hybrid,
         )
+        # After you get 'result' from rag.ask(...)
+        # ── Ensure unique titles/pages for React keys safely ──
+        # This checks if result is a dictionary or an object
+        sources = result.get("sources", []) if isinstance(result, dict) else getattr(result, "sources", [])
+
+        # Ensure each source has a unique title/id for the React keys
+        for i, source in enumerate(result.get("sources", [])):
+            if isinstance(source, dict):
+                # If sources are dictionaries
+                category_name = source.get("category", "Knowledge Base Document")
+                source["title"] = f"{category_name} (Source {i+1})"
+                source["page"] = i + 1
+            else:
+                # If sources are objects
+                category_name = getattr(source, "category", "Knowledge Base Document")
+                source.title = f"{category_name} (Source {i+1})"
+                source.page = i + 1
+   
         return result
+    
     except Exception as e:
         raise HTTPException(status_code=500, detail=str(e))
 
 
 @app.get("/search", response_model=list[SourceDoc], tags=["RAG"])
-def search_docs(query: str, top_k: int = 5, use_hybrid: bool = True):
+def search_docs(message: str, top_k: int = 5, use_hybrid: bool = True):
     """
     Retrieval only — returns top-k matching support documents with no generation.
     Useful for debugging retrieval quality or building your own generation layer.
     """
     try:
-        results = rag.search(query=query, top_k=top_k, use_hybrid=use_hybrid)
+        results = rag.search(query=message, top_k=top_k, use_hybrid=use_hybrid)
         return results
     except Exception as e:
         raise HTTPException(status_code=500, detail=str(e))
