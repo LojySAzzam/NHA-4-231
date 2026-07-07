@@ -1,20 +1,20 @@
 {
-  "query": "I am trying to leave my feedback for a service",
-  "answer": "We appreciate your intention to provide feedback for our service. Your input plays a crucial role in helping us identify areas for improvement and deliver a better experience for you and our future customers. To leave feedback for our service, you can visit our website and navigate to the \"Feedback\" or \"Contact Us\" section, where you will find a form or contact information specifically designed for collecting feedback. Alternatively, if you'd like to share your experience directly with me, please let me know the details of the service you would like to review, and any specific aspects or highlights you would like to mention. I'm here to assist you in sharing your feedback.",
+  "query": "I want to cancel my order",
+  "answer": "I've got that you no longer want to proceed with your order, and I'm here to assist you in canceling it. To cancel your order, please follow these steps:\n\n1. Sign in to your account: Access our platform and sign in using your credentials to proceed with the cancellation process.\n2. Locate the order details: Once you're logged in, navigate to the 'order history' or 'orders' section of your account. Look for the specific order you'd like to cancel.\n3. Initiate the cancellation: Within the order details, you'll find an option labeled 'cancel order' or similar. Please click on it to start the cancellation process.\n4. Confirm the cancellation: A confirmation message may appear to ensure that you want to cancel the order. Proceed by confirming the cancellation.\n5. Await cancellation confirmation: After successfully canceling the order, you should receive a cancellation confirmation notification via email or within your account.\n\nIf you encounter any issues during the cancellation process or have further questions, don't hesitate to reach out to our dedicated customer support team. You can contact them through our Live Chat on our website or by calling our support line. We appreciate your understanding and value your satisfaction as our top priority. \n\nCould you please provide me with your order number so I can better assist you with the cancellation?",
   "retrieval": "hybrid",
-  "latency_ms": 1924.1578578948975,
+  "latency_ms": 1523.5636234283447,
   "sources": [
     {
-      "intent": "review",
-      "score": 33.43410818054507
+      "intent": "cancel_order",
+      "score": 0.8113132785326211
     },
     {
-      "intent": "review",
-      "score": 28.161800017180965
+      "intent": "cancel_order",
+      "score": 0.7730927138258004
     },
     {
-      "intent": "review",
-      "score": 27.6684747783048
+      "intent": "cancel_order",
+      "score": 0.7657363034035802
     }
   ]
 }
