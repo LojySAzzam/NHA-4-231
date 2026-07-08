@@ -1,0 +1,20 @@
+{
+  "query": "help checking what payment methods are accepted",
+  "answer": "To view our available payment options, you can follow these simple steps:\n\n1. Visit our website and navigate to the \"Payment Methods\" or \"Checkout\" section.\n2. On the payment page, you will find a list of the accepted payment methods.\n3. Alternatively, you can check the \"FAQs\" or \"Help\" section of our website, where we often provide detailed information about our payment methods.\n4. If you're using our mobile app, go to the \"Settings\" or \"Account\" tab and select \"Payment Methods\" to see the options.\n\nIf you have any further questions, need clarification, or require assistance during the process, our dedicated customer service team is available to help you. We hope this information helps you review and select the most suitable payment method for your needs.",
+  "retrieval": "hybrid",
+  "latency_ms": 904.9193859100342,
+  "sources": [
+    {
+      "intent": "check_payment_methods",
+      "score": 0.8176282515985889
+    },
+    {
+      "intent": "check_payment_methods",
+      "score": 0.8174587780964249
+    },
+    {
+      "intent": "check_payment_methods",
+      "score": 0.8043191476240326
+    }
+  ]
+}

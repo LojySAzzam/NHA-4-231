@@ -1,0 +1,20 @@
+{
+  "query": "i need help seeing what shipping methods i can choose",
+  "answer": "I'd be happy to help you explore the shipping options available to you. To view the different shipping methods, you can follow these steps:\n\n1. Visit our website and navigate to the product page or shopping cart.\n2. Proceed to the checkout page.\n3. Look for the shipping options section, which is usually located on the right-hand side.\n4. Click on the dropdown menu to see the available shipping options along with their estimated delivery times.\n\nWe typically offer four distinct methods: \n1. Standard Shipping: This method typically takes a few business days for delivery.\n2. Expedited Shipping: If you need your items a bit quicker, we offer expedited shipping, which will get your package to you in a shorter timeframe.\n3. Overnight Shipping: For those urgent and time-sensitive situations, we have the option of overnight shipping, which delivers your package to your doorstep by the next business day.\n4. In-Store Pickup: If you prefer a more personal touch and want to save on shipping costs, you can choose in-store pickup.\n\nConsider factors like price, delivery speed, and any special requirements to choose the option that best suits your needs. If you have any specific concerns or need further assistance, feel free to let me know. I'm here to guide you and ensure your shipping experience is seamless and satisfying.",
+  "retrieval": "hybrid",
+  "latency_ms": 1056.9849014282227,
+  "sources": [
+    {
+      "intent": "delivery_options",
+      "score": 0.8471033783301836
+    },
+    {
+      "intent": "delivery_options",
+      "score": 0.8366797694015673
+    },
+    {
+      "intent": "delivery_options",
+      "score": 0.7977138863700195
+    }
+  ]
+}

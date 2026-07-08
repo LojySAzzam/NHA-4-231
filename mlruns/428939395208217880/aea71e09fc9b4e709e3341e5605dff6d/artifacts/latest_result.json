@@ -1,0 +1,20 @@
+{
+  "query": "I don't know what to do to find the invoice #37777",
+  "answer": "I've grasped that you're unsure about how to locate the invoice with the number #37777. Allow me to guide you through the process step by step. To find your invoice, you can start by logging into your account on our website. Once logged in, navigate to the \"Billing\" or \"Invoices\" section, where you should be able to search for invoices by invoice or order number. If you're having trouble finding the invoice you're looking for, our customer service team is available to assist you further. Simply reach out to them through the \"Contact Us\" page on our website or give them a call at our support line. They will be more than happy to provide you with the necessary guidance to locate your invoice.",
+  "retrieval": "hybrid",
+  "latency_ms": 5008.257150650024,
+  "sources": [
+    {
+      "intent": "get_invoice",
+      "score": 0.9052356036830198
+    },
+    {
+      "intent": "get_invoice",
+      "score": 0.8520277444837125
+    },
+    {
+      "intent": "check_invoice",
+      "score": 0.8384758535568161
+    }
+  ]
+}

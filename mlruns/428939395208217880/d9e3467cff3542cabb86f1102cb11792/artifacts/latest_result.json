@@ -1,0 +1,20 @@
+{
+  "query": "I am trying to leave my feedback for a service",
+  "answer": "I'm glad you're taking the time to provide your feedback about our service. Your input is invaluable to us, as it helps us understand your needs and improve our services accordingly. To leave your feedback, you can visit our website and navigate to the \"Contact Us\" or \"Feedback\" section, where you'll find a form or email address dedicated to receiving customer comments. Alternatively, you can reach out to our customer service team through our helpline or live chat, and we'll be happy to assist you in submitting your feedback. Could you please let me know which specific service you'd like to provide feedback on, so I can ensure your comments are directed to the right department?",
+  "retrieval": "hybrid",
+  "latency_ms": 2986.7966175079346,
+  "sources": [
+    {
+      "intent": "review",
+      "score": 0.7505010719342513
+    },
+    {
+      "intent": "review",
+      "score": 0.7463073711349484
+    },
+    {
+      "intent": "review",
+      "score": 0.7317349581963881
+    }
+  ]
+}

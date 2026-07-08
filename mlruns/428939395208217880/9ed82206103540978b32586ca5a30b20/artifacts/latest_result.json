@@ -1,0 +1,20 @@
+{
+  "query": "another information account",
+  "answer": "To provide you with accurate information, could you please confirm if you would like to delete your information account permanently or temporarily, or if you're looking to access or set up another information account? Additionally, it would be helpful if you could provide your account username or any other relevant details so that I can assist you more effectively in this matter. If you're unsure about the process, I'd be happy to guide you through the available options.",
+  "retrieval": "hybrid",
+  "latency_ms": 746.2928295135498,
+  "sources": [
+    {
+      "intent": "switch_account",
+      "score": 0.6892589756421782
+    },
+    {
+      "intent": "set_up_shipping_address",
+      "score": 0.640715606614935
+    },
+    {
+      "intent": "delete_account",
+      "score": 0.6121665193549464
+    }
+  ]
+}

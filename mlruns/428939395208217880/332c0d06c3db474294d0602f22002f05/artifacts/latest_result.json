@@ -1,0 +1,20 @@
+{
+  "query": "help me deleting my information account",
+  "answer": "Thank you for reaching out to us about deleting your information account. I'm here to assist you with this process. To provide you with accurate information, could you please confirm if you would like to delete your information account permanently or temporarily? Additionally, it would be helpful if you could provide your account username or any other relevant details so that I can assist you more effectively in this matter.",
+  "retrieval": "hybrid",
+  "latency_ms": 2760.6208324432373,
+  "sources": [
+    {
+      "intent": "delete_account",
+      "score": 0.7710825058155829
+    },
+    {
+      "intent": "delete_account",
+      "score": 0.7134855251409054
+    },
+    {
+      "intent": "delete_account",
+      "score": 0.707799133987451
+    }
+  ]
+}

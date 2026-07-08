@@ -1,0 +1,20 @@
+{
+  "query": "what do I have to do to look for the invoice #85632?",
+  "answer": "To view your invoice #85632, you can follow these steps:\n\n1. Log in to your account on our website.\n2. Navigate to the \"Invoices\" section.\n3. Look for the invoice with the number #85632.\n4. Click on the invoice to open and view the details.\n\nIf you encounter any difficulties or require further guidance, please don't hesitate to ask. I'm here to ensure a seamless experience for you.",
+  "retrieval": "hybrid",
+  "latency_ms": 2845.245838165283,
+  "sources": [
+    {
+      "intent": "check_invoice",
+      "score": 0.8604145606926323
+    },
+    {
+      "intent": "get_invoice",
+      "score": 0.8461023729240796
+    },
+    {
+      "intent": "check_invoice",
+      "score": 0.8179943246549508
+    }
+  ]
+}
