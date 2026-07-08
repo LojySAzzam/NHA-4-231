@@ -1,0 +1,20 @@
+{
+  "query": "I need to write an opinion for your products",
+  "answer": "Thank you for reaching out to us for guidance on writing an opinion for our products. We're here to help! To get started, you can consider the following points:\n\n1. Start with an introduction: Begin your opinion by providing a brief overview of the product you're reviewing.\n2. Share your experience: Describe how you have used the product, what you liked or didn't like about it, and any notable features or benefits you observed.\n3. Be specific: Include details about the product's functionality, design, quality, and any other aspects that are important to you.\n4. Provide examples or anecdotes: Sharing specific examples or personal experiences can make your opinion more relatable and informative.\n5. Consider the target audience: Think about who would benefit from reading your opinion and tailor your language and tone accordingly.\n6. Highlight pros and cons: If there are positive aspects you enjoyed, make sure to mention them. Likewise, if there are areas for improvement, feel free to provide constructive feedback.\n7. Summarize and rate: Conclude your opinion with a summary of your overall experience and, if applicable, provide a rating or recommendation.\n\nRemember, there are no wrong or right opinions. Your perspective matters, and we value your feedback. If you have any further questions or need assistance with anything else, please don't hesitate to reach out to us. We're always here to support you!",
+  "retrieval": "hybrid",
+  "latency_ms": 3571.7763900756836,
+  "sources": [
+    {
+      "intent": "review",
+      "score": 0.8120895558073085
+    },
+    {
+      "intent": "review",
+      "score": 0.7829950071167187
+    },
+    {
+      "intent": "review",
+      "score": 0.766346678895728
+    }
+  ]
+}

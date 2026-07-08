@@ -1,0 +1,20 @@
+{
+  "query": "I cannot sign up, could I inform of a registration issue?",
+  "answer": "We're sorry to hear that you're unable to sign up. To inform us about the registration issue you're facing, we recommend reaching out to our customer support team through our website's live chat or by calling our dedicated helpline. Our team is available 24/7 and will guide you through the process of reporting the issue in detail, working towards resolving it as quickly as possible. If you could also provide specific details about the issue you experienced, this will enable us to investigate further and assist you more effectively. Thank you for bringing this to our attention, and we appreciate your patience and cooperation as we work towards a solution.",
+  "retrieval": "hybrid",
+  "latency_ms": 2941.028594970703,
+  "sources": [
+    {
+      "intent": "registration_problems",
+      "score": 0.7523407285983332
+    },
+    {
+      "intent": "registration_problems",
+      "score": 0.7484651058635476
+    },
+    {
+      "intent": "registration_problems",
+      "score": 0.7416616486616008
+    }
+  ]
+}

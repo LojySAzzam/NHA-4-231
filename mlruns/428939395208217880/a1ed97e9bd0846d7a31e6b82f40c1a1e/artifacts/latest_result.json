@@ -1,0 +1,20 @@
+{
+  "query": "want help reporting issues with online payments",
+  "answer": "I'm here to assist you in reporting any issues you encounter with online payments. We understand the importance of resolving these issues promptly, and your feedback is crucial for us to improve our system and provide you with a seamless payment experience. To provide accurate and prompt assistance, could you please provide some additional details about the specific issues you're facing? By sharing this information, we can take the necessary steps to address the issue and ensure that your payments process smoothly in the future. If you need immediate assistance, you can also contact our customer support team directly through our website's Live Chat feature or by calling our dedicated support helpline. Thank you for reaching out and allowing us to help you.",
+  "retrieval": "hybrid",
+  "latency_ms": 859.8597049713135,
+  "sources": [
+    {
+      "intent": "payment_issue",
+      "score": 0.8447412345383013
+    },
+    {
+      "intent": "payment_issue",
+      "score": 0.7905295491545146
+    },
+    {
+      "intent": "payment_issue",
+      "score": 0.7619960312260483
+    }
+  ]
+}

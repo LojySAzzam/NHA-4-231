@@ -1,0 +1,20 @@
+{
+  "query": "I am trying to find information about my password recovery",
+  "answer": "To find information about your password recovery, you can visit our website and go to the login page. Look for the \"Forgot Password\" option and click on it. You will be prompted to provide your email address associated with your account. Once you enter your email, we will send you an email with instructions on how to reset your password. If you don't receive the email in your inbox, please check your spam or junk folder. If you encounter any difficulties or have further questions, please don't hesitate to reach out to our customer support team. We're here to assist you 24/7.",
+  "retrieval": "hybrid",
+  "latency_ms": 937.5083446502686,
+  "sources": [
+    {
+      "intent": "recover_password",
+      "score": 0.7637907486724658
+    },
+    {
+      "intent": "recover_password",
+      "score": 0.6907250116899727
+    },
+    {
+      "intent": "recover_password",
+      "score": 0.6717519629563888
+    }
+  ]
+}

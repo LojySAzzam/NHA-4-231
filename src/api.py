@@ -1,30 +1,45 @@
 """
 api.py
 ------
-Milestone 3 — FastAPI REST API
+Milestone 3 — FastAPI REST API (refactored)
 
 Wraps the RAG chain (src/rag_chain.py) as a production-ready HTTP server.
 
 Endpoints:
-    GET  /health          → confirms the service is up and models are loaded
-    POST /ask             → full RAG pipeline: retrieve + generate answer
-    GET  /search          → retrieval only, no generation (raw top-k docs)
+    GET  /health          -> confirms the service is up via rag.is_ready()
+    POST /api/chat         }
+    POST /ask              } same handler, two paths — see AskRequest below
+    GET  /search          -> retrieval only, no generation (raw top-k docs)
 
 Run locally:
     uvicorn src.api:app --reload --port 8000
 
 Then test in your browser:
-    http://localhost:8000/docs     ← interactive Swagger UI (auto-generated)
+    http://localhost:8000/docs     <- interactive Swagger UI (auto-generated)
 
-Or with curl:
+Or with curl (either payload shape works — see "API contract reconciliation"):
+    curl -X POST http://localhost:8000/api/chat \
+         -H "Content-Type: application/json" \
+         -d '{"message": "I want to cancel my order"}'
+
     curl -X POST http://localhost:8000/ask \
          -H "Content-Type: application/json" \
          -d '{"question": "I want to cancel my order"}'
+
+Refactor notes:
+    - /health now calls the public rag.is_ready() instead of reaching into
+      rag._faiss_index directly, restoring encapsulation across the module
+      boundary.
+    - AskRequest accepts either "message" (current frontend contract) or
+      "question" (legacy documented contract) via a single field with
+      AliasChoices, AND the handler is registered at both /api/chat and
+      /ask, so neither consumer 404s or KeyErrors regardless of which
+      path or payload shape they use.
 """
 
 from fastapi import FastAPI, HTTPException
 from fastapi.middleware.cors import CORSMiddleware
-from pydantic import BaseModel, Field
+from pydantic import BaseModel, Field, AliasChoices, ConfigDict
 from contextlib import asynccontextmanager
 import src.rag_chain as rag
 
@@ -32,9 +47,24 @@ import src.rag_chain as rag
 # ── Request / Response schemas ────────────────────────────────────────────────
 
 class AskRequest(BaseModel):
-    message   : str  = Field(..., min_length=3, example="I want to cancel my order")
+    """
+    Accepts either payload shape without ambiguity:
+        {"message": "..."}   <- current frontend (Next.js useChat-style) contract
+        {"question": "..."}  <- legacy contract documented in the Milestone 3
+                                 notebook / original module docstring
+    Both populate the same `message` field via AliasChoices.
+    """
+    model_config = ConfigDict(populate_by_name=True)
+
+    message: str = Field(
+        ...,
+        validation_alias=AliasChoices("message", "question"),
+        min_length=3,
+        examples=["I want to cancel my order"],
+    )
     top_k      : int  = Field(3, ge=1, le=10, description="Number of context docs to retrieve")
-    use_hybrid : bool = Field(True, description="True = vector+BM25, False = pure vector")
+    use_hybrid : bool = Field(True, description="True = RRF vector+BM25 fusion, False = pure vector")
+
 
 class SourceDoc(BaseModel):
     score      : float
@@ -45,16 +75,13 @@ class SourceDoc(BaseModel):
     title      : str = "Knowledge Base Document"  # Fallback string
     page       : int = 1                          # Fallback int
 
+
 class AskResponse(BaseModel):
     query    : str
     answer   : str
     sources  : list[SourceDoc]
     retrieval: str
 
-class SearchRequest(BaseModel):
-    query      : str  = Field(..., min_length=3, example="cancel order")
-    top_k      : int  = Field(5, ge=1, le=20)
-    use_hybrid : bool = Field(True)
 
 class HealthResponse(BaseModel):
     status : str
@@ -79,26 +106,26 @@ app = FastAPI(
     title="RAG Customer Support Chatbot API",
     description=(
         "Retrieval-Augmented Generation API for customer support automation. "
-        "Built with FAISS vector search, sentence-transformers embeddings, "
-        "and flan-t5-base local LLM. Milestone 3 of Project 5."
+        "Built with FAISS vector search + BM25 (fused via Reciprocal Rank "
+        "Fusion), Gemini embeddings, and Groq (llama-3.3-70b-versatile) "
+        "generation. Milestone 3 of Project 5."
     ),
-    version="1.0.0",
+    version="1.1.0",
     lifespan=lifespan,
 )
 
-# Allow all origins for local development
-# Lock this down to specific domains before production deployment
-
+# Restricted to known local frontend dev ports.
+# Lock this down further to your actual deployed frontend domain before production.
 origins = [
-    "http://localhost:3000",  # If Next.js
-    "http://localhost:5173",  # If Vite
+    "http://localhost:3000",  # Next.js
+    "http://localhost:5173",  # Vite
     "http://127.0.0.1:3000",
     "http://127.0.0.1:5173",
 ]
 
 app.add_middleware(
     CORSMiddleware,
-    allow_origins=origins,     # Swapping "*" out for your specific frontend ports
+    allow_origins=origins,
     allow_credentials=True,
     allow_methods=["*"],
     allow_headers=["*"],
@@ -110,53 +137,65 @@ app.add_middleware(
 @app.get("/health", response_model=HealthResponse, tags=["System"])
 def health_check():
     """
-    Confirm the API is running and all models are loaded.
-    Use this to verify the server started correctly.
+    Confirm the API is running and all runtime components are ready.
+
+    Delegates entirely to rag.is_ready(), which checks the FAISS index,
+    BM25 index, Groq client, and upstream API key presence from *inside*
+    rag_chain.py — this endpoint no longer reaches into rag_chain's
+    private module globals directly.
     """
+    ready = rag.is_ready()
     return {
-        "status"       : "ok",
-        "models_loaded": rag._faiss_index is not None,
+        "status"       : "ok" if ready else "degraded",
+        "models_loaded": ready,
     }
 
 
-@app.post("/api/chat", response_model=AskResponse, tags=["RAG"])
-def ask_question(request: AskRequest):
-    """
-    Full RAG pipeline: retrieve relevant context, generate a natural answer.
-
-    - Embeds your question using sentence-transformers
-    - Retrieves the top-k most relevant support docs from the FAISS index
-    - Feeds the docs as context into flan-t5-base
-    - Returns the generated answer + the source documents it used
-    """
+def _ask_question_impl(request: AskRequest) -> AskResponse:
+    """Shared implementation for both /api/chat and /ask."""
     try:
         result = rag.ask(
             query=request.message,
             top_k=request.top_k,
             use_hybrid=request.use_hybrid,
         )
-        # After you get 'result' from rag.ask(...)
-        # ── Ensure unique titles/pages for React keys safely ──
-        # This checks if result is a dictionary or an object
-        sources = result.get("sources", []) if isinstance(result, dict) else getattr(result, "sources", [])
 
-        # Ensure each source has a unique title/id for the React keys
-        for i, source in enumerate(result.get("sources", [])):
+        # Ensure each source has a unique title/page for stable React list keys.
+        sources = result.get("sources", []) if isinstance(result, dict) else getattr(result, "sources", [])
+        for i, source in enumerate(sources):
             if isinstance(source, dict):
-                # If sources are dictionaries
                 category_name = source.get("category", "Knowledge Base Document")
-                source["title"] = f"{category_name} (Source {i+1})"
+                source["title"] = f"{category_name} (Source {i + 1})"
                 source["page"] = i + 1
             else:
-                # If sources are objects
                 category_name = getattr(source, "category", "Knowledge Base Document")
-                source.title = f"{category_name} (Source {i+1})"
+                source.title = f"{category_name} (Source {i + 1})"
                 source.page = i + 1
-   
+
         return result
-    
+
     except Exception as e:
         raise HTTPException(status_code=500, detail=str(e))
+
+
+@app.post("/api/chat", response_model=AskResponse, tags=["RAG"])
+def ask_question_chat(request: AskRequest):
+    """
+    Full RAG pipeline: retrieve relevant context (RRF hybrid fusion),
+    generate a natural answer. Frontend contract: {"message": ...}.
+    """
+    return _ask_question_impl(request)
+
+
+@app.post("/ask", response_model=AskResponse, tags=["RAG"], include_in_schema=False)
+def ask_question_legacy(request: AskRequest):
+    """
+    Legacy-path alias for /api/chat, kept so the originally documented
+    contract ({"question": ...} at POST /ask) never 404s. Hidden from the
+    OpenAPI schema (include_in_schema=False) so /api/chat remains the one
+    documented, canonical route going forward.
+    """
+    return _ask_question_impl(request)
 
 
 @app.get("/search", response_model=list[SourceDoc], tags=["RAG"])

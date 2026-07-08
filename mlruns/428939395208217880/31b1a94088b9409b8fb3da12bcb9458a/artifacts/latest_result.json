@@ -1,0 +1,20 @@
+{
+  "query": "why I can't set the secondary shipping address valid up",
+  "answer": "I understand your frustration with not being able to set up a valid secondary shipping address. Let's work together to address this issue. To help you, I'll need to know which platform or website you are using to set up your shipping address. \n\nIf you're using a general website or platform, here are a few things you can try:\n\n1. Double-check the information you are entering: Make sure you have entered the correct details for your secondary shipping address, including the street name, apartment or suite number, city, state or province, and zip or postal code. Any typos or incorrect information may cause validation errors.\n\n2. Check for format requirements: Some platforms or systems have specific requirements for formatting shipping addresses. Ensure that you are following any formatting rules, such as using uppercase letters for certain fields or including additional information like the country name.\n\n3. Ensure compatibility with your location: It's possible that the system may not be compatible with your specific location. Check if the platform or service supports shipping addresses from your country or region. If not, you may need to reach out to the support team for further assistance.\n\n4. Clear cache and cookies: Sometimes, browser-related issues can interfere with address validation. Try clearing your browser's cache and cookies, and then attempt to set up your secondary shipping address again.\n\nIf these steps don't resolve the issue, please provide more details about the specific error messages or difficulties you are facing, and I'll do my best to guide you through the",
+  "retrieval": "hybrid",
+  "latency_ms": 4447.563648223877,
+  "sources": [
+    {
+      "intent": "set_up_shipping_address",
+      "score": 0.76898604104078
+    },
+    {
+      "intent": "set_up_shipping_address",
+      "score": 0.7394323171498784
+    },
+    {
+      "intent": "set_up_shipping_address",
+      "score": 0.7353132191636178
+    }
+  ]
+}

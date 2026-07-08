@@ -1,0 +1,20 @@
+{
+  "query": "I don't know what I have to do to order some items",
+  "answer": "Honored to assist! I'm here to guide you step-by-step and make it a seamless experience. To start, you can browse our online catalog to explore the wide range of products we offer. Once you have found the items you wish to purchase, simply add them to your cart. When you're ready to complete your purchase, proceed to the checkout page where you will be prompted to enter your shipping and payment information. Should you encounter any difficulties along the way or have any specific questions, please don't hesitate to ask. I'm here to assist you and ensure that your shopping experience is both enjoyable and successful. Let's get started! If you could also please let me know which specific item(s) you are interested in, I can provide more tailored assistance.",
+  "retrieval": "hybrid",
+  "latency_ms": 916.6431427001953,
+  "sources": [
+    {
+      "intent": "place_order",
+      "score": 0.8374970230696304
+    },
+    {
+      "intent": "place_order",
+      "score": 0.8111820201879294
+    },
+    {
+      "intent": "place_order",
+      "score": 0.7294535697536748
+    }
+  ]
+}

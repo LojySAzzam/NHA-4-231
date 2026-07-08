@@ -1,0 +1,20 @@
+{
+  "query": "help me checking how long it takes for the article to arrive",
+  "answer": "I'd be happy to help you with that. To provide you with accurate information, could you please provide me with the information or your order number associated with the article? With that, I'll be able to give you a precise estimate of when you can expect your article to arrive. Thank you for your cooperation and patience in this matter.",
+  "retrieval": "hybrid",
+  "latency_ms": 1833.0552577972412,
+  "sources": [
+    {
+      "intent": "delivery_period",
+      "score": 0.7842234492385146
+    },
+    {
+      "intent": "delivery_period",
+      "score": 0.7623533323262788
+    },
+    {
+      "intent": "delivery_period",
+      "score": 0.7605137293297672
+    }
+  ]
+}

@@ -1,0 +1,20 @@
+{
+  "query": "can you help me to cancel purchase your order number?",
+  "answer": "I'd be happy to help you cancel your purchase. To do so, please follow these steps:\n\n1. Sign in to your account by logging in to your information.\n2. Navigate to the 'orders' or 'purchase history' section.\n3. Locate the purchase associated with your order number and click on it to view the details.\n4. Look for the option to cancel or initiate a return, and select it to start the cancellation process.\n5. Follow any additional prompts or instructions provided by the system to finalize the cancellation.\n\nIf you encounter any difficulties during the process or have any further questions, please don't hesitate to reach out to our dedicated support team. They are available to assist you through the Live Chat feature on our website or by contacting our support line. We're here to help and ensure your satisfaction throughout the cancellation process.",
+  "retrieval": "hybrid",
+  "latency_ms": 1042.5286293029785,
+  "sources": [
+    {
+      "intent": "cancel_order",
+      "score": 0.8701407581697651
+    },
+    {
+      "intent": "cancel_order",
+      "score": 0.8610369413705622
+    },
+    {
+      "intent": "cancel_order",
+      "score": 0.8544225260608741
+    }
+  ]
+}

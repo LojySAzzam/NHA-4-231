@@ -1,0 +1,20 @@
+{
+  "query": "I have got to earn some products",
+  "answer": "Thank you for reaching out. It seems that you're looking to acquire some products, but you mentioned earning them. To clarify, our products are typically purchased rather than earned. If you're interested in buying some items, I'd be happy to help you with that. Could you please provide more details about the specific products you're interested in? This will allow me to guide you efficiently and ensure that you have a seamless experience in obtaining these items.",
+  "retrieval": "hybrid",
+  "latency_ms": 805.6492805480957,
+  "sources": [
+    {
+      "intent": "place_order",
+      "score": 0.7427491901662517
+    },
+    {
+      "intent": "place_order",
+      "score": 0.6748350695609224
+    },
+    {
+      "intent": "place_order",
+      "score": 0.6360702921951267
+    }
+  ]
+}

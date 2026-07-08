@@ -1,0 +1,20 @@
+{
+  "query": "correct purchase your order number",
+  "answer": "Thank you for reaching out to us about correcting your purchase with order number your order number. We're here to help you with that. To ensure we make the correct changes, could you please specify the items you would like to correct in your order? Your feedback is essential in helping us refine your order and improve our services. We appreciate your patience and understanding throughout this process.",
+  "retrieval": "hybrid",
+  "latency_ms": 755.9285163879395,
+  "sources": [
+    {
+      "intent": "change_order",
+      "score": 0.7911717139149352
+    },
+    {
+      "intent": "change_order",
+      "score": 0.7629466911707836
+    },
+    {
+      "intent": "change_order",
+      "score": 0.7365945098908667
+    }
+  ]
+}
