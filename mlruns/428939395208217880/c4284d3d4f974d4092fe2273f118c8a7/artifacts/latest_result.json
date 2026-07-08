@@ -1,0 +1,20 @@
+{
+  "query": "I am trying to see when will my purchase arrive",
+  "answer": "We completely understand your desire to know when your purchase will arrive. To provide you with an accurate estimate, could you please provide us with your order number? With this information, we will be able to track your purchase and give you the most up-to-date delivery information. Thank you for your patience and cooperation.",
+  "retrieval": "hybrid",
+  "latency_ms": 680.0909042358398,
+  "sources": [
+    {
+      "intent": "delivery_period",
+      "score": 0.8672322571277619
+    },
+    {
+      "intent": "delivery_period",
+      "score": 0.7828866736181272
+    },
+    {
+      "intent": "delivery_period",
+      "score": 0.7521689084579091
+    }
+  ]
+}

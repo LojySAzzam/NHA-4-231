@@ -1,0 +1,20 @@
+{
+  "query": "I have got to submit some feedback for a service",
+  "answer": "I appreciate your willingness to submit feedback for our service. To do so, you can visit our website and navigate to the \"Contact\" or \"Support\" page, where you'll find options to leave your comments, suggestions, or concerns. Alternatively, you can reach out to our customer support team via email or phone, and they'll be happy to guide you through the process. If you could specify which service you'd like to provide feedback on, I can ensure that your feedback is directed to the relevant department. Please let me know how I can assist you further.",
+  "retrieval": "hybrid",
+  "latency_ms": 789.6504402160645,
+  "sources": [
+    {
+      "intent": "review",
+      "score": 0.8541854126419767
+    },
+    {
+      "intent": "review",
+      "score": 0.7780615706409416
+    },
+    {
+      "intent": "review",
+      "score": 0.7773280378961044
+    }
+  ]
+}

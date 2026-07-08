@@ -1,0 +1,20 @@
+{
+  "query": "i need assistance removing my pro account",
+  "answer": "Thank you for reaching out to us about removing your pro account. I'm here to guide you through the process. To assist you further, could you please provide your account information such as your username or email address? This will enable me to provide you with accurate instructions tailored specifically to your account. Rest assured, I will ensure a seamless experience for you as we proceed with the removal of your pro account.",
+  "retrieval": "hybrid",
+  "latency_ms": 760.1790428161621,
+  "sources": [
+    {
+      "intent": "create_account",
+      "score": 0.6509312078387034
+    },
+    {
+      "intent": "delete_account",
+      "score": 0.65077683080494
+    },
+    {
+      "intent": "delete_account",
+      "score": 0.6464351100627261
+    }
+  ]
+}

@@ -1,0 +1,20 @@
+{
+  "query": "order your order number current status",
+  "answer": "Thanks for getting in touch. I understand that you would like to check the current status of your order with the order number. To provide you with accurate information, I will need to access our order tracking system. Please allow me a moment to check the status for you.",
+  "retrieval": "hybrid",
+  "latency_ms": 693.6626434326172,
+  "sources": [
+    {
+      "intent": "track_order",
+      "score": 0.8689501912879367
+    },
+    {
+      "intent": "track_order",
+      "score": 0.8679707428518746
+    },
+    {
+      "intent": "track_order",
+      "score": 0.8623340287317833
+    }
+  ]
+}

@@ -1,0 +1,9 @@
+artifact_location: file:///d:/depi/RAG/RAG_project/NHA-4-231/mlruns/428939395208217880
+creation_time: 1783511071328
+effective_trace_archival_retention: null
+experiment_id: '428939395208217880'
+last_update_time: 1783511071328
+lifecycle_stage: active
+name: rag-support-chatbot
+trace_location: null
+workspace: default

@@ -1,0 +1,20 @@
+{
+  "query": "where to restore my account key?",
+  "answer": "I'd be happy to help you restore your account key. To do so, please follow these steps:\n\n1. Visit the \"information\" section of our platform.\n2. Look for the \"information\" option and select it.\n3. You will be prompted to enter your registered email address associated with your account.\n4. Once you provide the email address, an email containing instructions to restore your account key will be sent to your inbox. Please check your spam or other folders if you don't see it in your main inbox.\n5. Carefully follow the instructions provided in the email to successfully restore your account key.\n\nIf you encounter any difficulties during this process or have further questions, please don't hesitate to reach out to me. I'm here to assist you every step of the way!",
+  "retrieval": "hybrid",
+  "latency_ms": 873.2824325561523,
+  "sources": [
+    {
+      "intent": "recover_password",
+      "score": 0.8031614384258079
+    },
+    {
+      "intent": "recover_password",
+      "score": 0.7872592075416933
+    },
+    {
+      "intent": "recover_password",
+      "score": 0.7727985144838903
+    }
+  ]
+}

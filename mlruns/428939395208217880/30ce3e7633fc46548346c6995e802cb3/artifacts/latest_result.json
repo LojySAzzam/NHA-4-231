@@ -1,0 +1,20 @@
+{
+  "query": "change to the information account",
+  "answer": "To change to the information account, I'd be happy to guide you through the process. \n\n1. Sign In: Begin by logging into your account, ensuring you have the necessary credentials at hand.\n2. Account Settings: Navigate to the \"information\" section. Look for a tab that refers to upgrading or changing your account type.\n3. Information Selection: Locate the option that specifies the \"information\" or \"information\" feature.\n4. Informed Decision: Once you've found the desired option, select it. Take a moment to review the benefits and privileges that accompany the information account.\n5. Confirmation and Finalization: Follow the prompted steps, provide any necessary information, and confirm your choice to switch to the information account.\n\nIf you encounter any difficulties or have any further questions along the way, please feel free to reach out. I'm here to assist you and ensure a smooth transition to the exclusive benefits and features of the information account.",
+  "retrieval": "hybrid",
+  "latency_ms": 923.5825538635254,
+  "sources": [
+    {
+      "intent": "edit_account",
+      "score": 0.8442941709052558
+    },
+    {
+      "intent": "switch_account",
+      "score": 0.8413948010758354
+    },
+    {
+      "intent": "switch_account",
+      "score": 0.8377804643341908
+    }
+  ]
+}
