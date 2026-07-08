@@ -1,8 +1,8 @@
 {
-  "query": "I am trying to leave my feedback for a service",
-  "answer": "I'm glad you're taking the time to provide your feedback about our service. Your input is invaluable in helping us understand your needs and improve our services. To leave your feedback, you can visit our website and navigate to the \"Contact Us\" or \"Feedback\" section, where you'll find a form or email address dedicated to receiving customer comments. Alternatively, you can reach out to our customer service team through our helpline or live chat, and we'll be happy to assist you in submitting your feedback. Could you please let me know which specific service you'd like to provide feedback on, so I can ensure your comments are directed to the right department?",
+  "query": "I want to cancel my order",
+  "answer": "I've got that you no longer want to proceed with your order, and I'm here to assist you in canceling it. To cancel your order, please follow these steps:\n\n1. Sign in to your account: Access our platform and sign in using your credentials to proceed with the cancellation process.\n2. Locate the order details: Once you're logged in, navigate to the 'order history' or 'orders' section of your account. Look for the specific order you'd like to cancel.\n3. Initiate the cancellation: Within the order details, you'll find an option labeled 'cancel order' or similar. Please click on it to start the cancellation process.\n4. Confirm the cancellation: A confirmation message may appear to ensure that you want to cancel the order. Proceed by confirming the cancellation. \n5. Await cancellation confirmation: After successfully canceling the order, you should receive a cancellation confirmation notification via email or within your account.\n\nIf you encounter any issues during the cancellation process or have further questions, don't hesitate to reach out to our dedicated customer support team. You can contact them through our Live Chat on our website or by calling our support line. We appreciate your understanding and value your satisfaction as our top priority.",
   "retrieval": "hybrid",
-  "latency_ms": 3007.439136505127,
+  "latency_ms": 3848.7396240234375,
   "sources": [
     {
       "intent": "review",
