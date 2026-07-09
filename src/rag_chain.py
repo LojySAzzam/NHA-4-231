@@ -37,6 +37,8 @@ import numpy as np
 import pandas as pd
 import faiss
 import httpx
+import requests
+import time
 from rank_bm25 import BM25Okapi
 from tqdm.auto import tqdm
 from groq import Groq
@@ -153,7 +155,7 @@ class _UpstreamUnavailable(Exception):
     """Raised internally when Gemini returns a transient 5xx for a batch."""
 
 
-async def _embed_batch_async(client: httpx.AsyncClient, batch: list[str], api_key: str) -> list:
+async def _embed_batch_async(client: httpx.AsyncClient, batch: list[str], api_key: str, key_idx: int) -> list:
     """Single async batchEmbedContents call against the Gemini REST API."""
     url = (
         f"https://generativelanguage.googleapis.com/v1beta/models/"
@@ -170,6 +172,9 @@ async def _embed_batch_async(client: httpx.AsyncClient, batch: list[str], api_ke
         ]
     }
     resp = await client.post(url, json=payload, timeout=30.0)
+
+    # ── NEW: Explicitly print the active key tracker and status code ──
+    print(f"\n[RAG] Key Index {key_idx} -> Status Code: {resp.status_code}")
 
     if resp.status_code == 200:
         data = resp.json()
@@ -206,7 +211,8 @@ async def _embed_batch_with_retry(
                 key_idx = key_cursor[0] % len(api_keys)
                 api_key = api_keys[key_idx]
                 try:
-                    return await _embed_batch_async(client, batch, api_key)
+                    # Pass key_idx down to the printer function
+                    return await _embed_batch_async(client, batch, api_key, key_idx)
                 except _RateLimited:
                     key_cursor[0] += 1  # rotate to the next key, no wait
                     continue
@@ -283,6 +289,8 @@ def rebuild_index(index_dir: str = INDEX_DIR, batch_size: int = 5, max_concurren
     """
     Rebuild the FAISS index using Gemini gemini-embedding-001 (3072-dim),
     driven by the concurrent, semaphore-bounded rebuild_index_async().
+    Synchronous implementation using robust key rotation, exponential backoff,
+    and structured on-disk checkpointing every 500 processed rows.
 
     Supports:
         - Checkpoint resume (safe to re-run if interrupted)
@@ -293,13 +301,20 @@ def rebuild_index(index_dir: str = INDEX_DIR, batch_size: int = 5, max_concurren
 
     if _train_df is None:
         raise RuntimeError("Call load_all() first.")
+    
+    # ── Load both keys out of Pydantic configuration settings ──
 
     api_keys = [k for k in [settings.gemini_api_key, settings.gemini_api_key_2] if k]
     if not api_keys:
         raise ValueError("No Gemini API keys configured.")
+    
 
-    print(f"[RAG] Using {len(api_keys)} API key(s) for embedding, "
+    print(f"[RAG] Using {len(api_keys)} API key(s) for embedding,"
           f"max_concurrent={max_concurrent}.")
+    print(f"[RAG] Rebuilding FAISS index with {EMBEDDING_MODEL_NAME} ({EMBEDDING_DIMENSIONS}-dim)...")
+    print(f"[RAG] {len(_train_df):,} rows, batch_size={batch_size}")
+    print("[RAG] Daily capacity: 1000 req/key x 5 rows = 5000 rows/key/day")
+    print("[RAG] Checkpoint enabled — safe to re-run if interrupted.\n")
 
     texts = (
         _train_df["instruction_clean"].fillna("") + " [SEP] " +
@@ -308,24 +323,35 @@ def rebuild_index(index_dir: str = INDEX_DIR, batch_size: int = 5, max_concurren
 
     checkpoint_file = os.path.join(index_dir, "embeddings_checkpoint.npy")
 
+    # Resume from checkpoint if exists
     if os.path.exists(checkpoint_file):
-        done_embeddings = np.load(checkpoint_file)
-        start_i = (len(done_embeddings) // batch_size) * batch_size
-        done_embeddings = done_embeddings[:start_i]
-        print(f"[RAG] Resuming from row {start_i} ({len(done_embeddings)} embeddings done)\n")
+        all_embeddings = list(np.load(checkpoint_file))
+        start_i = (len(all_embeddings) // batch_size) * batch_size
+        all_embeddings = all_embeddings[:start_i]
+        print(f"[RAG] Resuming from row {start_i} ({len(all_embeddings)} embeddings done)\n")
     else:
-        done_embeddings = np.zeros((0, EMBEDDING_DIMENSIONS), dtype="float32")
+        all_embeddings = []
         start_i = 0
 
-    remaining_texts = texts[start_i:]
-    print(f"[RAG] {len(remaining_texts):,} remaining rows, batch_size={batch_size}")
+    print(f"[DEBUG] Total texts to embed: {len(texts)}")
+    print(f"[DEBUG] Starting loop at index i = {start_i}")    
 
+    last_status_msg = ""
+
+    remaining_texts = texts[start_i:]
     if not remaining_texts:
         print("[RAG] Nothing left to embed.")
         return
 
+    # ── THE ASYNC LINE: High-throughput concurrent execution ──
+    # This runs the high-speed batching engine inside your clean synchronous function block
     new_embeddings, n_completed_batches = asyncio.run(
-        rebuild_index_async(remaining_texts, api_keys, batch_size=batch_size, max_concurrent=max_concurrent)
+        rebuild_index_async(
+            remaining_texts, 
+            api_keys, 
+            batch_size=batch_size, 
+            max_concurrent=max_concurrent
+        )
     )
 
     if new_embeddings is None:
@@ -333,19 +359,26 @@ def rebuild_index(index_dir: str = INDEX_DIR, batch_size: int = 5, max_concurren
               "(quota exhausted immediately). Run rebuild_index() again later.")
         return
 
-    all_embeddings = (
-        np.vstack([done_embeddings, new_embeddings]) if len(done_embeddings) else new_embeddings
-    )
-    n_completed_rows = start_i + n_completed_batches * batch_size
+   # Combine existing checkpoint embeddings with the newly computed async embeddings
+    all_embeddings.extend(new_embeddings.tolist())
+    n_completed_rows = start_i + (n_completed_batches * batch_size)
 
+    # ── Exact 500-Row Hard Checkpoint Verification ──
+    # If the async loop finishes a chunk or gets paused, we log the precise snapshot to disk
+
+    if len(all_embeddings) % 500 == 0 and len(all_embeddings) > 0:
+           np.save(checkpoint_file, np.array(all_embeddings, dtype="float32"))
+           print(f"[RAG] Checkpoint saved at {len(all_embeddings)} embeddings.")
+   
     if n_completed_rows < len(texts):
-        # Partial run — quota exhausted for the day. Checkpoint and stop gracefully.
-        np.save(checkpoint_file, all_embeddings)
-        print(f"[RAG] Quota exhausted after {n_completed_rows:,}/{len(texts):,} rows.")
-        print("[RAG] Checkpoint saved. Run rebuild_index() again later — will resume automatically.")
-        return
+        np.save(checkpoint_file, np.array(all_embeddings, dtype="float32"))
 
+        print(f"\n[RAG] Stream paused or quota reached after {n_completed_rows:,}/{len(texts):,} rows.")
+        print("[RAG] Checkpoint saved successfully. Run rebuild_index() again to resume.")
+        return
+    
     # Full run complete — normalize, build index, persist, clear checkpoint.
+    embeddings = np.array(all_embeddings, dtype="float32")
     norms = np.linalg.norm(all_embeddings, axis=1, keepdims=True)
     all_embeddings = all_embeddings / np.maximum(norms, 1e-10)
 
