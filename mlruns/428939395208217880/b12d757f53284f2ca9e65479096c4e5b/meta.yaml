@@ -1,0 +1,14 @@
+artifact_uri: file:///d:/depi/RAG/RAG_project/NHA-4-231/mlruns/428939395208217880/b12d757f53284f2ca9e65479096c4e5b/artifacts
+end_time: 1783555172884
+entry_point_name: ''
+experiment_id: '428939395208217880'
+lifecycle_stage: active
+run_id: b12d757f53284f2ca9e65479096c4e5b
+run_name: luminous-grub-376
+source_name: ''
+source_type: 4
+source_version: ''
+start_time: 1783555171746
+status: 3
+tags: []
+user_id: lojyn

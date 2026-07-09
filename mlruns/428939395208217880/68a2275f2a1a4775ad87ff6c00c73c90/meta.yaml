@@ -1,0 +1,14 @@
+artifact_uri: file:///d:/depi/RAG/RAG_project/NHA-4-231/mlruns/428939395208217880/68a2275f2a1a4775ad87ff6c00c73c90/artifacts
+end_time: 1783555193817
+entry_point_name: ''
+experiment_id: '428939395208217880'
+lifecycle_stage: active
+run_id: 68a2275f2a1a4775ad87ff6c00c73c90
+run_name: fortunate-cub-220
+source_name: ''
+source_type: 4
+source_version: ''
+start_time: 1783555190412
+status: 3
+tags: []
+user_id: lojyn

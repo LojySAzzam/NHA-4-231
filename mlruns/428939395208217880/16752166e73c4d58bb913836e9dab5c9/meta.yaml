@@ -1,0 +1,14 @@
+artifact_uri: file:///d:/depi/RAG/RAG_project/NHA-4-231/mlruns/428939395208217880/16752166e73c4d58bb913836e9dab5c9/artifacts
+end_time: 1783555185579
+entry_point_name: ''
+experiment_id: '428939395208217880'
+lifecycle_stage: active
+run_id: 16752166e73c4d58bb913836e9dab5c9
+run_name: resilient-worm-317
+source_name: ''
+source_type: 4
+source_version: ''
+start_time: 1783555184117
+status: 3
+tags: []
+user_id: lojyn

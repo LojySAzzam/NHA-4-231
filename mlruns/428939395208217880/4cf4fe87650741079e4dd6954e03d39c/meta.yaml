@@ -1,0 +1,14 @@
+artifact_uri: file:///d:/depi/RAG/RAG_project/NHA-4-231/mlruns/428939395208217880/4cf4fe87650741079e4dd6954e03d39c/artifacts
+end_time: 1783555153073
+entry_point_name: ''
+experiment_id: '428939395208217880'
+lifecycle_stage: active
+run_id: 4cf4fe87650741079e4dd6954e03d39c
+run_name: sedate-bird-410
+source_name: ''
+source_type: 4
+source_version: ''
+start_time: 1783555151590
+status: 3
+tags: []
+user_id: lojyn

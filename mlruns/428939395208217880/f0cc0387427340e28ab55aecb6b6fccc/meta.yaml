@@ -1,0 +1,14 @@
+artifact_uri: file:///d:/depi/RAG/RAG_project/NHA-4-231/mlruns/428939395208217880/f0cc0387427340e28ab55aecb6b6fccc/artifacts
+end_time: 1783555175481
+entry_point_name: ''
+experiment_id: '428939395208217880'
+lifecycle_stage: active
+run_id: f0cc0387427340e28ab55aecb6b6fccc
+run_name: caring-deer-203
+source_name: ''
+source_type: 4
+source_version: ''
+start_time: 1783555174283
+status: 3
+tags: []
+user_id: lojyn

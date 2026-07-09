@@ -1,0 +1,14 @@
+artifact_uri: file:///d:/depi/RAG/RAG_project/NHA-4-231/mlruns/428939395208217880/11399e5f9cd14e20ad48b2062c8139d0/artifacts
+end_time: 1783555178160
+entry_point_name: ''
+experiment_id: '428939395208217880'
+lifecycle_stage: active
+run_id: 11399e5f9cd14e20ad48b2062c8139d0
+run_name: rogue-sloth-316
+source_name: ''
+source_type: 4
+source_version: ''
+start_time: 1783555176859
+status: 3
+tags: []
+user_id: lojyn

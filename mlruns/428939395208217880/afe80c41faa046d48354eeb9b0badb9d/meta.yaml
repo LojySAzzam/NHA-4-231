@@ -1,0 +1,14 @@
+artifact_uri: file:///d:/depi/RAG/RAG_project/NHA-4-231/mlruns/428939395208217880/afe80c41faa046d48354eeb9b0badb9d/artifacts
+end_time: 1783555182213
+entry_point_name: ''
+experiment_id: '428939395208217880'
+lifecycle_stage: active
+run_id: afe80c41faa046d48354eeb9b0badb9d
+run_name: burly-grub-47
+source_name: ''
+source_type: 4
+source_version: ''
+start_time: 1783555181086
+status: 3
+tags: []
+user_id: lojyn

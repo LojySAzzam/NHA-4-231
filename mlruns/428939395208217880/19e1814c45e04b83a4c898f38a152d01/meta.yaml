@@ -1,0 +1,14 @@
+artifact_uri: file:///d:/depi/RAG/RAG_project/NHA-4-231/mlruns/428939395208217880/19e1814c45e04b83a4c898f38a152d01/artifacts
+end_time: 1783554395211
+entry_point_name: ''
+experiment_id: '428939395208217880'
+lifecycle_stage: active
+run_id: 19e1814c45e04b83a4c898f38a152d01
+run_name: lyrical-yak-629
+source_name: ''
+source_type: 4
+source_version: ''
+start_time: 1783554395079
+status: 4
+tags: []
+user_id: lojyn

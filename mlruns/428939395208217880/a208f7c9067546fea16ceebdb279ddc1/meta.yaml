@@ -1,0 +1,14 @@
+artifact_uri: file:///d:/depi/RAG/RAG_project/NHA-4-231/mlruns/428939395208217880/a208f7c9067546fea16ceebdb279ddc1/artifacts
+end_time: 1783555163201
+entry_point_name: ''
+experiment_id: '428939395208217880'
+lifecycle_stage: active
+run_id: a208f7c9067546fea16ceebdb279ddc1
+run_name: useful-calf-76
+source_name: ''
+source_type: 4
+source_version: ''
+start_time: 1783555161752
+status: 3
+tags: []
+user_id: lojyn
