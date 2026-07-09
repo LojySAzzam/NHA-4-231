@@ -547,3 +547,8 @@ def search(query: str, top_k: int = 5, use_hybrid: bool = True) -> list:
         if use_hybrid
         else _retrieve_vector(query, top_k=top_k)
     )
+
+# ── Expose Pydantic settings attributes to module root for notebook compatibility ──
+
+# This instantiates your class if it hasn't been instantiated, or uses the global instance
+GROQ_MODEL_NAME = settings.groq_model_name
