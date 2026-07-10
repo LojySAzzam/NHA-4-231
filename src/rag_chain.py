@@ -207,23 +207,25 @@ async def _embed_batch_with_retry(
     """
     async with sem:
         for attempt in range(6):
-            for _ in range(len(api_keys)):
-                key_idx = key_cursor[0] % len(api_keys)
-                api_key = api_keys[key_idx]
-                try:
-                    # Pass key_idx down to the printer function
-                    return await _embed_batch_async(client, batch, api_key, key_idx)
-                except _RateLimited:
-                    key_cursor[0] += 1  # rotate to the next key, no wait
-                    continue
-                except _UpstreamUnavailable:
-                    await asyncio.sleep(15)
-                    continue
+            # ── CHANGED: Read the current key directly without looping through all of them ──
+            key_idx = key_cursor[0] % len(api_keys)
+            api_key = api_keys[key_idx]
+            try:
+                # Pass key_idx down to the printer function
+                return await _embed_batch_async(client, batch, api_key, key_idx)
+            except _RateLimited:
+                # Move the cursor to the next key so the next batch uses it
+                key_cursor[0] += 1
+                # If you only have 1 key left or both are failing, apply backoff immediately
+                wait = 60 + attempt * 15
+                print(f"\n[RAG] Key Index {key_idx} rate limited (429). "
+                      f"Switched pointer. Backing off for {wait}s (attempt {attempt + 1}/6)...")
+                await asyncio.sleep(wait)
+                continue  # Retry this batch on the next attempt with the new key
 
-            wait = 60 + attempt * 15
-            print(f"[RAG] All keys exhausted for this batch — waiting {wait}s "
-                  f"(attempt {attempt + 1}/6)...")
-            await asyncio.sleep(wait)
+            except _UpstreamUnavailable:
+                await asyncio.sleep(15)
+                continue
 
         return None
 
